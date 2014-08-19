@@ -15,7 +15,7 @@ If enabling and configuring SSH access, it is by public key authentication and, 
 
 ## Quick Example
 
-Run up a container named ```apache-php.app-1.1.1``` from the docker image ```jdeathe/centos-ssh-apache-php``` on port 8080 of your docker host.
+Run up a container named ```apache-php.app-1.1.1``` from the docker image ```jdeathe/centos-ssh-apache-php-fcgi``` on port 8080 of your docker host.
 
 ```
 $ docker run -d \
@@ -28,7 +28,7 @@ $ docker run -d \
   --env APACHE_SERVER_ALIAS=app-1 \
   --env DATE_TIMEZONE=UTC \
   -v /var/services-data/apache-php/app-1:/var/www/app \
-  jdeathe/centos-ssh-apache-php:latest
+  jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
 
 Now point your browser to ```http://<docker-host>:8080``` where "```<docker-host>```" is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
@@ -80,7 +80,7 @@ $ docker run -d \
   --env DATE_TIMEZONE=UTC \
   --volumes-from volume-config.apache-php.app-1.1.1 \
   -v /var/services-data/apache-php/app-1:/var/www/app \
-  jdeathe/centos-ssh-apache-php:latest
+  jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
 
 Now you can verify it is initialised and running successfully by inspecting the container's logs
@@ -192,7 +192,7 @@ $ docker run -d \
   --env DATE_TIMEZONE=UTC \
   --volumes-from volume-config.apache-php.app-1.1.1 \
   -v /var/services-data/apache-php/app-1:/var/www/app \
-  jdeathe/centos-ssh-apache-php:latest
+  jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
 
 #### services-config/ssl/certs/localhost.crt
