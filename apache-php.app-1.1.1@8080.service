@@ -50,7 +50,7 @@ ExecStartPre=/bin/sudo /bin/bash -c \
     if [ -f /var/services-packages/jdeathe/centos-ssh-apache-php-fcgi.centos-6-1.0.0.tar.xz ]; then \
       /usr/bin/xz -dc /var/services-packages/jdeathe/centos-ssh-apache-php-fcgi.centos-6-1.0.0.tar.xz | /usr/bin/docker load; \
     else \
-      /usr/bin/docker pull jdeathe/centos-ssh-apache-php-fcgi:latest; \
+      /usr/bin/docker pull jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.0.0; \
     fi; \
   fi"
 
