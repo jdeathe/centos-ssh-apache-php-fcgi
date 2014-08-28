@@ -78,7 +78,7 @@ RUN cp -rpf /var/www/app/bin /var/www/.app-skel/bin
 # -----------------------------------------------------------------------------
 # Copy files into place
 # -----------------------------------------------------------------------------
-ADD etc/services-config/httpd/conf.d/fcgid.conf /etc/httpd/conf.d/
+ADD etc/services-config/httpd/conf.d/fcgid.conf /etc/services-config/httpd/conf.d/
 RUN ln -sf /etc/services-config/httpd/conf.d/fcgid.conf /etc/httpd/conf.d/fcgid.conf
 
 EXPOSE 80 8443 443
