@@ -136,7 +136,7 @@ To set the timezone for the UK and account for British Summer Time you would use
 
 If using the optional data volume for container configuration you are able to customise the configuration. In the following examples your custom docker configuration files should be located on the Docker host under the directory ```/etc/service-config/<container-name>/``` where ```<container-name>``` should match the applicable container name such as "apache-php.app-1.1.1" in the examples.
 
-#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
+#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
 
 The bootstrap script initialises the app. It sets up the Apache service user + group, generates passwords, enables Apache modules and adds/removes SSL support.
 
@@ -215,7 +215,7 @@ To override the SSLCertificateKeyFile add it to your config directory using the 
 
 *Note:* You must also specify the associated SSLCertificateFile in this case.
 
-#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
+#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
 
 The supervisor service's configuration can also be overriden by editing the custom supervisord.conf file. It shouldn't be necessary to change the existing configuration here but you could include more [program:x] sections to run additional commands at startup.
 
