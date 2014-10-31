@@ -136,7 +136,7 @@ To set the timezone for the UK and account for British Summer Time you would use
 
 If using the optional data volume for container configuration you are able to customise the configuration. In the following examples your custom docker configuration files should be located on the Docker host under the directory ```/etc/service-config/<container-name>/``` where ```<container-name>``` should match the applicable container name such as "apache-php.app-1.1.1" in the examples.
 
-#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/master/etc/services-config/httpd/apache-bootstrap.conf)
+#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
 
 The bootstrap script initialises the app. It sets up the Apache service user + group, generates passwords, enables Apache modules and adds/removes SSL support.
 
@@ -215,7 +215,7 @@ To override the SSLCertificateKeyFile add it to your config directory using the 
 
 *Note:* You must also specify the associated SSLCertificateFile in this case.
 
-#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/master/etc/services-config/supervisor/supervisord.conf)
+#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
 
 The supervisor service's configuration can also be overriden by editing the custom supervisord.conf file. It shouldn't be necessary to change the existing configuration here but you could include more [program:x] sections to run additional commands at startup.
 
@@ -223,4 +223,4 @@ The supervisor service's configuration can also be overriden by editing the cust
 
 In the previous example Docker run commands we mapped the Docker host directory ```/var/services-data/apache-php/app-1``` to ```/var/www/app``` in the Docker container, where ```/var/services-data/``` is the directory used to store persistent files and the subdirectory is used by an individual app's named container(s), ```apache-php.app-1.1.1```, in the previous examples.
 
-On first run, the bootstrap script, ([/etc/apache-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/master/etc/apache-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will poplate it with the example app scripts and VirtualHost configuration files. If you place your own app in this directory it will not be overwritten but you must ensure to include at least a vhost.conf file and, if enabling SSL a vhost-ssl.conf file too.
+On first run, the bootstrap script, ([/etc/apache-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/apache-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will poplate it with the example app scripts and VirtualHost configuration files. If you place your own app in this directory it will not be overwritten but you must ensure to include at least a vhost.conf file and, if enabling SSL a vhost-ssl.conf file too.
