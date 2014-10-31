@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP memcached 1.0, PHP APC 3.1, Composer
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php
+FROM jdeathe/centos-ssh-apache-php:centos-6
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -16,11 +16,6 @@ RUN yum --setopt=tsflags=nodocs -y install \
 	mod_fcgid \
 	&& rm -rf /var/cache/yum/* \
 	&& yum clean all
-
-# -----------------------------------------------------------------------------
-# Add a "Message of the Day" to help identify container if logging in via SSH
-# -----------------------------------------------------------------------------
-RUN echo '[ CentOS-6 / Apache / PHP (FastCGI) ]' > /etc/motd
 
 # -----------------------------------------------------------------------------
 # Apache mime_magic module should be disabled with FastCGI
@@ -46,9 +41,9 @@ RUN sed -i \
 # -----------------------------------------------------------------------------
 # Disable mod_php
 # -----------------------------------------------------------------------------
-RUN mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php.conf.off
-RUN touch /etc/httpd/conf.d/php.conf
-RUN chmod 444 /etc/httpd/conf.d/php.conf
+RUN mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php.conf.off \
+	&& touch /etc/httpd/conf.d/php.conf \
+	&& chmod 444 /etc/httpd/conf.d/php.conf
 
 # -----------------------------------------------------------------------------
 # Add the PHP Wrapper script
@@ -57,29 +52,20 @@ RUN mkdir -p /var/www/app/bin
 ADD var/www/app/bin/php-wrapper /var/www/app/bin/
 
 # -----------------------------------------------------------------------------
-# Replace the PHP Standard bootstrap
+# Set permissions & add to the template directory
 # -----------------------------------------------------------------------------
-ADD etc/services-config/httpd/apache-bootstrap.conf /etc/services-config/httpd/
-RUN ln -sf /etc/services-config/httpd/apache-bootstrap.conf /etc/apache-bootstrap.conf
-
-ADD etc/apache-bootstrap /etc/
-RUN chmod +x /etc/apache-bootstrap
-
-# -----------------------------------------------------------------------------
-# Set permissions (app:app-www === 501:502)
-# -----------------------------------------------------------------------------
-RUN chmod -R 750 /var/www/app/bin
-
-# -----------------------------------------------------------------------------
-# Add to the template directory
-# -----------------------------------------------------------------------------
-RUN cp -rpf /var/www/app/bin /var/www/.app-skel/bin
+RUN chmod -R 750 /var/www/app/bin \
+	&& cp -rpf /var/www/app/bin /var/www/.app-skel/bin
 
 # -----------------------------------------------------------------------------
 # Copy files into place
 # -----------------------------------------------------------------------------
+ADD etc/apache-bootstrap /etc/
+ADD etc/services-config/httpd/apache-bootstrap.conf /etc/services-config/httpd/
 ADD etc/services-config/httpd/conf.d/fcgid.conf /etc/services-config/httpd/conf.d/
-RUN ln -sf /etc/services-config/httpd/conf.d/fcgid.conf /etc/httpd/conf.d/fcgid.conf
+RUN ln -sf /etc/services-config/httpd/apache-bootstrap.conf /etc/apache-bootstrap.conf \
+	&& ln -sf /etc/services-config/httpd/conf.d/fcgid.conf /etc/httpd/conf.d/fcgid.conf \
+	&& chmod +x /etc/apache-bootstrap
 
 EXPOSE 80 8443 443
 
