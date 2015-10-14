@@ -6,6 +6,7 @@ if [[ $DIR_PATH == */* ]]; then
 fi
 
 source run.conf
+source etc/services-config/httpd/apache-bootstrap.conf
 
 OPTS_APACHE_MOD_SSL_ENABLED="${APACHE_MOD_SSL_ENABLED:-false}"
 
@@ -95,7 +96,7 @@ docker run \
 	--env APACHE_SERVER_ALIAS=${SERVICE_UNIT_APP_GROUP} \
 	--env DATE_TIMEZONE=${DATE_TIMEZONE} \
 	--volumes-from ${VOLUME_CONFIG_NAME} \
-	-v ${MOUNT_PATH_DATA}/${SERVICE_UNIT_NAME}/${SERVICE_UNIT_APP_GROUP}:/var/www/app \
+	-v ${MOUNT_PATH_DATA}/${SERVICE_UNIT_NAME}/${SERVICE_UNIT_APP_GROUP}:${APP_HOME_DIR:-/var/www/app} \
 	${DOCKER_IMAGE_REPOSITORY_NAME} -c "${DOCKER_COMMAND}"
 )
 
@@ -116,7 +117,7 @@ docker run \
 # 	--env APACHE_SERVER_NAME=${SERVICE_UNIT_APP_GROUP}.local \
 # 	--env APACHE_SERVER_ALIAS=${SERVICE_UNIT_APP_GROUP} \
 # 	--volumes-from ${VOLUME_CONFIG_NAME} \
-# 	-v ${MOUNT_PATH_DATA}/www/${SERVICE_UNIT_APP_GROUP}:/var/www/app \
+# 	-v ${MOUNT_PATH_DATA}/www/${SERVICE_UNIT_APP_GROUP}:${APP_HOME_DIR:-/var/www/app} \
 # 	${DOCKER_IMAGE_REPOSITORY_NAME} -c "${DOCKER_COMMAND}"
 # )
 
