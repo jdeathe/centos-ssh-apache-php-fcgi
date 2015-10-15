@@ -105,6 +105,8 @@ docker run \
 	-v ${CONTAINER_MOUNT_PATH_CONFIG_SHARED_SSH}/ssh:/etc/services-config/ssh \
 	-v ${CONTAINER_MOUNT_PATH_CONFIG}/supervisor:/etc/services-config/supervisor \
 	-v ${CONTAINER_MOUNT_PATH_CONFIG}/httpd:/etc/services-config/httpd \
+	-v ${CONTAINER_MOUNT_PATH_CONFIG}/ssl/certs:/etc/services-config/ssl/certs \
+	-v ${CONTAINER_MOUNT_PATH_CONFIG}/ssl/private:/etc/services-config/ssl/private \
 	busybox:latest \
 	/bin/true;
 )
