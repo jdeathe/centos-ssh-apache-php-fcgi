@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP memcached 1.0, PHP APC 3.1, Composer
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.3.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -12,6 +12,9 @@ MAINTAINER James Deathe <james.deathe@gmail.com>
 # FastCGI support
 # -----------------------------------------------------------------------------
 RUN yum --setopt=tsflags=nodocs -y install \
+	fcgi-2.4.0-12.el6 \
+	mod_fcgid-2.3.9-1.el6 \
+	&& yum versionlock add \
 	fcgi \
 	mod_fcgid \
 	&& rm -rf /var/cache/yum/* \
