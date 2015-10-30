@@ -51,14 +51,8 @@ RUN mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php.conf.off \
 # -----------------------------------------------------------------------------
 # Add the PHP Wrapper script
 # -----------------------------------------------------------------------------
-RUN mkdir -p /var/www/app/bin
-ADD var/www/app/bin/php-wrapper /var/www/app/bin/
-
-# -----------------------------------------------------------------------------
-# Set permissions & add to the template directory
-# -----------------------------------------------------------------------------
-RUN chmod -R 750 /var/www/app/bin \
-	&& cp -rpf /var/www/app/bin /var/www/.app-skel/bin
+ADD var/www/app-bin/php-wrapper /var/www/app-bin/
+RUN chmod -R 750 /var/www/app-bin
 
 # -----------------------------------------------------------------------------
 # Copy files into place
