@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Change working directory
-DIR_PATH="$( cd "$( echo "${0%/*}" )"; pwd )"
-if [[ $DIR_PATH == */* ]]; then
+DIR_PATH="$( if [ "$( echo "${0%/*}" )" != "$( echo "${0}" )" ] ; then cd "$( echo "${0%/*}" )"; fi; pwd )"
+if [[ $DIR_PATH == */* ]] && [[ $DIR_PATH != "$( pwd )" ]] ; then
 	cd $DIR_PATH
 fi
 
@@ -12,11 +12,11 @@ source build.conf
 
 show_docker_image ()
 {
-	NAME=$1
-	NAME_PARTS=(${NAME//:/ })
+	local NAME=$1
+	local NAME_PARTS=(${NAME//:/ })
 
 	# Set 'latest' tag if no tag requested
-	if [ ${#NAME_PART[@]} == 1 ]; then
+	if [ ${#NAME_PARTS[@]} == 1 ]; then
 		NAME_PARTS[1]='latest'
 	fi
 

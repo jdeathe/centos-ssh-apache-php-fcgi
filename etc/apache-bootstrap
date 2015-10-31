@@ -24,21 +24,12 @@ fi
 if [[ ! -n $(find ${APP_HOME_DIR} -maxdepth 1 -type f) ]] && [[ -d ${APP_HOME_DIR_TEMPLATE} ]]; then
 	echo Home directory ${APP_HOME_DIR} exists but is empty - populate it using ${APP_HOME_DIR_TEMPLATE}...
 	cp -rf ${APP_HOME_DIR_TEMPLATE}/. ${APP_HOME_DIR}/
-elif [[ ! -d ${APP_HOME_DIR}/bin || ! -n $(find ${APP_HOME_DIR}/bin -maxdepth 1 -type f) ]] && [[ -d ${APP_HOME_DIR_TEMPLATE}/bin ]]; then
-	echo Home directory ${APP_HOME_DIR}/bin is missing or empty empty - populate it using ${APP_HOME_DIR_TEMPLATE}/bin...
-	cp -rf ${APP_HOME_DIR_TEMPLATE}/bin ${APP_HOME_DIR}/
-elif [[ ! -d ${APP_HOME_DIR}/public_html ]]; then
-	echo ERROR: ${APP_HOME_DIR}/public_html not found.
-	exit 1
 fi
 
-# Correct permissions (750) must be set on the bin directory and the php-wrapper
-if [[ ! "$(stat -c %a ${APP_HOME_DIR}/bin)" == "750" ]]; then
-	echo ERROR: Permissions on ${APP_HOME_DIR}/bin must be 750...
-#	exit 1
-elif [[ ! "$(stat -c %a ${APP_HOME_DIR}/bin/php-wrapper)" == "750" ]]; then
-	echo ERROR: Permissions on ${APP_HOME_DIR}/bin/php-wrapper must be 750...
-#	exit 1
+# Document root directory is required
+if [[ ! -d ${APP_HOME_DIR}/public_html ]]; then
+	echo ERROR: ${APP_HOME_DIR}/public_html not found.
+	exit 1
 fi
 
 # If users need to change the vhost.conf the SSL version can be rebuilt if it is deleted
@@ -56,7 +47,7 @@ if [[ ${OPTS_APACHE_MOD_SSL_ENABLED} == "true" ]] && [[ ! -f ${APP_HOME_DIR}/vho
 		-e 's~#SSLCipherSuite \(.*\)$~SSLCipherSuite \1~g' \
 		-e 's~#SSLCertificateFile \(.*\)$~SSLCertificateFile \1~g' \
 		-e 's~#SSLCertificateKeyFile \(.*\)$~SSLCertificateKeyFile \1~g' \
-		/var/www/app/vhost-ssl.conf
+		${APP_HOME_DIR}/vhost-ssl.conf
 fi
 
 # Enable/Disable SSL support
@@ -66,7 +57,7 @@ if [[ ${OPTS_APACHE_MOD_SSL_ENABLED} == "true" ]]; then
 
 	sed -i \
 		-e 's~^#NameVirtualHost \*:443$~NameVirtualHost \*:443~g' \
-		-e 's~^#Include /var/www/app/vhost-ssl.conf$~Include /var/www/app/vhost-ssl.conf~g' \
+		-e 's~^#Include ${APP_HOME_DIR}/vhost-ssl.conf$~Include ${APP_HOME_DIR}/vhost-ssl.conf~g' \
 		/etc/httpd/conf/httpd.conf
 
 	if [[ ! -f /etc/services-config/ssl/private/localhost.key ]] || [[ ! -f /etc/services-config/ssl/certs/localhost.crt ]]; then
@@ -85,7 +76,7 @@ else
 
 	sed -i \
 		-e 's~^NameVirtualHost \*:443$~#NameVirtualHost \*:443~g' \
-		-e 's~^Include /var/www/app/vhost-ssl.conf$~#Include /var/www/app/vhost-ssl.conf~g' \
+		-e 's~^Include ${APP_HOME_DIR}/vhost-ssl.conf$~#Include ${APP_HOME_DIR}/vhost-ssl.conf~g' \
 		/etc/httpd/conf/httpd.conf
 fi
 
@@ -100,16 +91,22 @@ fi
 
 # Set the Apache (run) service user/group
 if [[ ${OPTS_SUEXECUSERGROUP} == "true" ]]; then
-	sed -i -e "s~^User .*$~User ${OPTS_SERVICE_USER_GROUP}~g" -e "s~^Group .*$~Group ${OPTS_SERVICE_USER_GROUP}~g" -e "s~^LogLevel warn$~LogLevel debug~g" /etc/httpd/conf/httpd.conf
-	sed -i -e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' /var/www/app/vhost.conf
-	sed -i -e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' /var/www/app/vhost-ssl.conf
-	chown -R 502:502 /var/{www/app/bin,www/.app-skel/bin,run/mod_fcgid}
+	sed -i -e "s~^User .*$~User ${OPTS_SERVICE_USER_GROUP}~g" \
+		-e "s~^Group .*$~Group ${OPTS_SERVICE_USER_GROUP}~g" /etc/httpd/conf/httpd.conf
+	sed -i -e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' ${APP_HOME_DIR}/vhost.conf
+	sed -i -e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' ${APP_HOME_DIR}/vhost-ssl.conf
+	chown -R 502:502 /var/{www/app-bin,run/mod_fcgid}
 else
-	sed -i -e "s~^User .*$~User apache~g" -e "s~^Group .*$~Group apache~g" /etc/httpd/conf/httpd.conf
-	sed -i -e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' /var/www/app/vhost.conf
-	sed -i -e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' /var/www/app/vhost-ssl.conf
-	chown -R apache:apache /var/{www/app/bin,www/.app-skel/bin,run/mod_fcgid}
+	sed -i -e "s~^User .*$~User apache~g" \
+		-e "s~^Group .*$~Group apache~g" /etc/httpd/conf/httpd.conf
+	sed -i -e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' ${APP_HOME_DIR}/vhost.conf
+	sed -i -e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' ${APP_HOME_DIR}/vhost-ssl.conf
+	chown -R apache:apache /var/{www/app-bin,run/mod_fcgid}
 fi
+
+# Update any existing instances of php-wrapper path in the Virtual Host
+sed -i -e 's~app/bin/php-wrapper~app-bin/php-wrapper~g' ${APP_HOME_DIR}/vhost.conf
+sed -i -e 's~app/bin/php-wrapper~app-bin/php-wrapper~g' ${APP_HOME_DIR}/vhost-ssl.conf
 
 echo Loading Apache modules...
 for MODULE in ${APACHE_LOAD_MODULES}
@@ -124,16 +121,15 @@ done
 echo "${OPTS_SERVICE_USER}:${OPTS_SERVICE_USER_PASSWORD}" | chpasswd
 echo "${OPTS_SERVICE_USER_GROUP}:${OPTS_SERVICE_USER_GROUP_PASSWORD}" | chpasswd
 
-echo
-echo "================================================================================"
-echo "Apache Credentials"
-echo "--------------------------------------------------------------------------------"
-echo "${OPTS_SERVICE_USER} : ${OPTS_SERVICE_USER_PASSWORD}"
-echo "${OPTS_SERVICE_USER_GROUP} : ${OPTS_SERVICE_USER_GROUP_PASSWORD}"
-echo "--------------------------------------------------------------------------------"
-echo
+	cat <<-EOT
 
-# Allow some time for supervisor_stdout to start
-sleep 2
+		================================================================================
+		Apache Credentials
+		--------------------------------------------------------------------------------
+		${OPTS_SERVICE_USER} : ${OPTS_SERVICE_USER_PASSWORD}
+		${OPTS_SERVICE_USER_GROUP} : ${OPTS_SERVICE_USER_GROUP_PASSWORD}
+		--------------------------------------------------------------------------------
+		
+	EOT
 
 exit 0

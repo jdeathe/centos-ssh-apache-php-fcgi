@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source /etc/apache-bootstrap.conf
+
 # Allow PHP settings to be varied by passing a parameter to php-wrapper
 PHP_VERSION=$1
 PHP_WRAPPER_MODE=$2
@@ -45,15 +47,6 @@ else
 	# Default to the default distribution version
 	X_PHP_CGI="/usr/bin/php-cgi"
 fi
-
-# Set the app home directory relative to the wrapper script
-ROOT_WWW_DIR='/var/www'
-
-if [ "$( cd ../..; pwd )" != "${ROOT_WWW_DIR}"  ]; then
-	echo "[PHP WRAPPER] Error: The application home directory is expected under ${ROOT_WWW_DIR}/"
-	exit 1
-fi
-APP_HOME_DIR="$( cd ..; pwd )"
 
 # Unset MySQL host address and port environment variables if they are not set in the vhost
 if [[ ${DB_MYSQL_PORT_3306_TCP_ADDR} == '${DB_MYSQL_PORT_3306_TCP_ADDR}' ]]; then

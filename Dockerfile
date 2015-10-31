@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP memcached 1.0, PHP APC 3.1, Composer
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.3.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -12,6 +12,9 @@ MAINTAINER James Deathe <james.deathe@gmail.com>
 # FastCGI support
 # -----------------------------------------------------------------------------
 RUN yum --setopt=tsflags=nodocs -y install \
+	fcgi-2.4.0-12.el6 \
+	mod_fcgid-2.3.9-1.el6 \
+	&& yum versionlock add \
 	fcgi \
 	mod_fcgid \
 	&& rm -rf /var/cache/yum/* \
@@ -48,14 +51,8 @@ RUN mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php.conf.off \
 # -----------------------------------------------------------------------------
 # Add the PHP Wrapper script
 # -----------------------------------------------------------------------------
-RUN mkdir -p /var/www/app/bin
-ADD var/www/app/bin/php-wrapper /var/www/app/bin/
-
-# -----------------------------------------------------------------------------
-# Set permissions & add to the template directory
-# -----------------------------------------------------------------------------
-RUN chmod -R 750 /var/www/app/bin \
-	&& cp -rpf /var/www/app/bin /var/www/.app-skel/bin
+ADD var/www/app-bin/php-wrapper /var/www/app-bin/
+RUN chmod -R 750 /var/www/app-bin
 
 # -----------------------------------------------------------------------------
 # Copy files into place
