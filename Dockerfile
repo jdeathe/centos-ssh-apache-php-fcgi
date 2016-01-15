@@ -25,14 +25,14 @@ RUN rpm --rebuilddb \
 # Apache mime_magic module should be disabled with FastCGI
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^LoadModule mime_magic_module modules/mod_mime_magic.so~#LoadModule mime_magic_module modules/mod_mime_magic.so~g' \
+	-e 's~^LoadModule mime_magic_module ~#LoadModule mime_magic_module ~g' \
 	/etc/httpd/conf/httpd.conf
 
 # -----------------------------------------------------------------------------
 # Enable the pathinfo fix
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^;cgi.fix_pathinfo=1~cgi.fix_pathinfo = 1~g' \
+	-e 's~^;cgi.fix_pathinfo=1$~cgi.fix_pathinfo=1~g' \
 	/etc/php.ini
 
 # -----------------------------------------------------------------------------
