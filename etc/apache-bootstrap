@@ -101,22 +101,28 @@ fi
 
 # Set the Apache (run) service user/group
 if [[ ${OPTS_SUEXECUSERGROUP} == true ]]; then
-	sed -i -e "s~^User .*$~User ${OPTS_SERVICE_USER_GROUP}~g" \
-		-e "s~^Group .*$~Group ${OPTS_SERVICE_USER_GROUP}~g" /etc/httpd/conf/httpd.conf
-	sed -i -e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' ${OPTS_APP_HOME_DIR}/vhost.conf
-	sed -i -e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' ${OPTS_APP_HOME_DIR}/vhost-ssl.conf
+	sed -i \
+		-e "s~^User .*$~User ${OPTS_SERVICE_USER_GROUP}~g" \
+		-e "s~^Group .*$~Group ${OPTS_SERVICE_USER_GROUP}~g" \
+		/etc/httpd/conf/httpd.conf
+	sed -i \
+		-e 's~#SuexecUserGroup \(.*\)$~SuexecUserGroup \1~g' \
+		-e 's~app/bin/php-wrapper~app-bin/php-wrapper~g' \
+		${OPTS_APP_HOME_DIR}/vhost.conf \
+		${OPTS_APP_HOME_DIR}/vhost-ssl.conf
 	chown -R 502:502 /var/{www/app-bin,run/mod_fcgid}
 else
-	sed -i -e "s~^User .*$~User apache~g" \
-		-e "s~^Group .*$~Group apache~g" /etc/httpd/conf/httpd.conf
-	sed -i -e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' ${OPTS_APP_HOME_DIR}/vhost.conf
-	sed -i -e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' ${OPTS_APP_HOME_DIR}/vhost-ssl.conf
+	sed -i \
+		-e "s~^User .*$~User apache~g" \
+		-e "s~^Group .*$~Group apache~g" \
+		/etc/httpd/conf/httpd.conf
+	sed -i \
+		-e 's~\([^#]\)SuexecUserGroup \(.*\)$~\1#SuexecUserGroup \2~g' \
+		-e 's~app/bin/php-wrapper~app-bin/php-wrapper~g' \
+		${OPTS_APP_HOME_DIR}/vhost.conf \
+		${OPTS_APP_HOME_DIR}/vhost-ssl.conf
 	chown -R apache:apache /var/{www/app-bin,run/mod_fcgid}
 fi
-
-# Update any existing instances of php-wrapper path in the Virtual Host
-sed -i -e 's~app/bin/php-wrapper~app-bin/php-wrapper~g' ${OPTS_APP_HOME_DIR}/vhost.conf
-sed -i -e 's~app/bin/php-wrapper~app-bin/php-wrapper~g' ${OPTS_APP_HOME_DIR}/vhost-ssl.conf
 
 echo "Loading Apache modules."
 for MODULE in ${APACHE_LOAD_MODULES}; do
