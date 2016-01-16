@@ -11,7 +11,7 @@ The [Dockerfile](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/cent
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
-Included in the build are the [EPEL](http://fedoraproject.org/wiki/EPEL) and [IUS](https://ius.io/) repositories. Installed packages include ssh, vi, elinks (for fullstatus support), PHP [APC](http://php.net/manual/en/book.apc.php)/(https://pecl.php.net/package/memcached), PHP [Memcached](http://php.net/manual/en/book.memcached.php) are installed along with python-setuptools, supervisor and supervisor-stdout.
+Included in the build are the [EPEL](http://fedoraproject.org/wiki/EPEL) and [IUS](https://ius.io/) repositories. Installed packages include ssh, vi, elinks (for fullstatus support), PHP [APC](http://php.net/manual/en/book.apc.php), PHP [Memcached](http://php.net/manual/en/book.memcached.php) are installed along with python-setuptools, supervisor and supervisor-stdout.
 
 [Supervisor](http://supervisord.org/) is used to start httpd.worker (and optionally the sshd) daemon when a docker container based on this image is run. To enable simple viewing of stdout for the sshd subprocess, supervisor-stdout is included. This allows you to see output from the supervisord controlled subprocesses with ```docker logs <docker-container-name>```.
 
