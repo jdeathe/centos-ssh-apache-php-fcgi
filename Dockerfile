@@ -4,14 +4,15 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP memcached 1.0, PHP APC 3.1, Composer
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.3.0
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.3.1
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
 # -----------------------------------------------------------------------------
 # FastCGI support
 # -----------------------------------------------------------------------------
-RUN yum --setopt=tsflags=nodocs -y install \
+RUN rpm --rebuilddb \
+	&& yum --setopt=tsflags=nodocs -y install \
 	fcgi-2.4.0-12.el6 \
 	mod_fcgid-2.3.9-1.el6 \
 	&& yum versionlock add \
@@ -24,14 +25,14 @@ RUN yum --setopt=tsflags=nodocs -y install \
 # Apache mime_magic module should be disabled with FastCGI
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^LoadModule mime_magic_module modules/mod_mime_magic.so~#LoadModule mime_magic_module modules/mod_mime_magic.so~g' \
+	-e 's~^LoadModule mime_magic_module ~#LoadModule mime_magic_module ~g' \
 	/etc/httpd/conf/httpd.conf
 
 # -----------------------------------------------------------------------------
 # Enable the pathinfo fix
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^;cgi.fix_pathinfo=1~cgi.fix_pathinfo = 1~g' \
+	-e 's~^;cgi.fix_pathinfo=1$~cgi.fix_pathinfo=1~g' \
 	/etc/php.ini
 
 # -----------------------------------------------------------------------------
