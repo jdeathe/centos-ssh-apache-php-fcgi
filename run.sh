@@ -82,14 +82,6 @@ if ! have_docker_container_name ${VOLUME_CONFIG_NAME}; then
 	if [[ -z $(find ${CONTAINER_MOUNT_PATH_CONFIG}/supervisor -maxdepth 1 -type f) ]]; then
 		CMD=$(cp -R etc/services-config/supervisor ${CONTAINER_MOUNT_PATH_CONFIG}/)
 		$CMD || sudo $CMD
-	else
-		# In case the supervisor configuration exists from the mod_php parent container
-		if [[ $(uname) == Darwin ]]; then
-			CMD=$(sed -i '' -e 's~/usr/sbin/httpd ~/usr/sbin/httpd.worker ~g' ${CONTAINER_MOUNT_PATH_CONFIG}/supervisor/supervisord.conf)
-		else 
-			CMD=$(sed -i -e 's~/usr/sbin/httpd ~/usr/sbin/httpd.worker ~g' ${CONTAINER_MOUNT_PATH_CONFIG}/supervisor/supervisord.conf)
-		fi
-		$CMD || sudo $CMD
 	fi
 
 	if [[ ! -d ${CONTAINER_MOUNT_PATH_CONFIG}/httpd ]]; then
@@ -167,6 +159,7 @@ docker run \
 	--env "APACHE_MOD_SSL_ENABLED=false" \
 	--env "APP_HOME_DIR=${APP_HOME_DIR}" \
 	--env "DATE_TIMEZONE=UTC" \
+	--env "HTTPD=${HTTPD}" \
 	--env "SERVICE_USER=app" \
 	--env "SERVICE_USER_GROUP=app-www" \
 	--env "SERVICE_USER_PASSWORD=" \
@@ -196,6 +189,7 @@ docker run \
 # 	--env "APACHE_MOD_SSL_ENABLED=false" \
 # 	--env "APP_HOME_DIR=/var/www/app-1" \
 # 	--env "DATE_TIMEZONE=Europe/London" \
+# 	--env "HTTPD=/usr/sbin/httpd.worker" \
 # 	--env "SERVICE_USER=app" \
 # 	--env "SERVICE_USER_GROUP=app-www" \
 # 	--env "SERVICE_USER_PASSWORD=" \
@@ -206,6 +200,6 @@ docker run \
 # )
 
 if is_docker_container_name_running ${DOCKER_NAME}; then
-	docker ps | awk -v pattern="${DOCKER_NAME}$" '$NF ~ pattern { print $0 ; }'
+	docker ps | awk -v pattern="${DOCKER_NAME}$" '$NF ~ pattern { print $0; }'
 	echo " ---> Docker container running."
 fi
