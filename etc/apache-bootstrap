@@ -105,7 +105,7 @@ if [[ ${OPTS_APACHE_MOD_SSL_ENABLED} == true ]] && [[ ! -f ${OPTS_APP_HOME_DIR}/
 	# Enable the SSL VirtualHosts configuration
 	sed -i \
 		-e 's~^<VirtualHost \*:80 \*:8443>$~<VirtualHost \*:443>~g' \
-		-e '/<IfModule mod_ssl.c>/,/<\/IfModule>/ s~^#~~' \
+		-e '/<IfModule mod_ssl.c>/,/<\/IfModule>/ s~\( *\)\(#\( \([^ ]\)\)\?\)\(.*\)$~\1\4\5~' \
 		${OPTS_APP_HOME_DIR}/vhost-ssl.conf
 fi
 
