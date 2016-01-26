@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.4.0
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.4.1
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -36,13 +36,6 @@ RUN sed -i \
 	/etc/php.ini
 
 # -----------------------------------------------------------------------------
-# Enable Apache MPM worker
-# -----------------------------------------------------------------------------
-RUN sed -i \
-	-e 's~#HTTPD=/usr/sbin/httpd.worker~HTTPD=/usr/sbin/httpd.worker~g' \
-	/etc/sysconfig/httpd
-
-# -----------------------------------------------------------------------------
 # Disable mod_php
 # -----------------------------------------------------------------------------
 RUN mv /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/php.conf.off \
@@ -64,6 +57,29 @@ ADD etc/services-config/httpd/conf.d/fcgid.conf /etc/services-config/httpd/conf.
 RUN ln -sf /etc/services-config/httpd/apache-bootstrap.conf /etc/apache-bootstrap.conf \
 	&& ln -sf /etc/services-config/httpd/conf.d/fcgid.conf /etc/httpd/conf.d/fcgid.conf \
 	&& chmod +x /etc/apache-bootstrap
+
+# -----------------------------------------------------------------------------
+# Set default environment variables used to identify the service container
+# -----------------------------------------------------------------------------
+ENV SERVICE_UNIT_APP_GROUP app-1
+ENV SERVICE_UNIT_LOCAL_ID 1
+ENV SERVICE_UNIT_INSTANCE 1
+
+# -----------------------------------------------------------------------------
+# Set default environment variables used to configure the service container
+# -----------------------------------------------------------------------------
+ENV APACHE_EXTENDED_STATUS_ENABLED false
+ENV APACHE_LOAD_MODULES "authz_user_module log_config_module expires_module deflate_module headers_module setenvif_module mime_module status_module dir_module alias_module"
+ENV APACHE_MOD_SSL_ENABLED false
+ENV APACHE_SERVER_ALIAS ""
+ENV APACHE_SERVER_NAME app-1.local
+ENV APP_HOME_DIR /var/www/app
+ENV DATE_TIMEZONE UTC
+ENV HTTPD /usr/sbin/httpd.worker
+ENV SERVICE_USER app
+ENV SERVICE_USER_GROUP app-www
+ENV SERVICE_USER_PASSWORD ""
+ENV SUEXECUSERGROUP false
 
 EXPOSE 80 8443 443
 
