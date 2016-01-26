@@ -7,6 +7,16 @@ get_password ()
 	echo $(head -n 4096 /dev/urandom | tr -cd '[:alnum:]' | head -c ${1})
 }
 
+set_apache_server_name ()
+{
+	local HOST_NAME=${1:-${APACHE_SERVER_NAME:-$(hostname)}}
+	local PORT=${2:-80}
+
+	sed -i \
+		-e "s~^#ServerName \(.*\):80$~ServerName ${HOST_NAME}:${PORT}~g" \
+		/etc/httpd/conf/httpd.conf
+}
+
 APP_HOME_DIR_TEMPLATE="/var/www/.app-skel"
 
 OPTS_APACHE_SERVER_NAME="${APACHE_SERVER_NAME:-$(hostname)}"
@@ -57,6 +67,9 @@ else
 	echo "ERROR: Apache Server MPM (${HTTPD}) unknown."
 	exit 1
 fi
+
+# Add ServerName
+set_apache_server_name ${OPTS_APACHE_SERVER_NAME} 80
 
 # If users need to change the vhost.conf the SSL version can be rebuilt if it is deleted
 if [[ ${OPTS_APACHE_MOD_SSL_ENABLED} == true ]] && [[ ! -f ${OPTS_APP_HOME_DIR}/vhost-ssl.conf ]] && [[ -f ${OPTS_APP_HOME_DIR}/vhost.conf ]]; then
