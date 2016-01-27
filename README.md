@@ -211,7 +211,7 @@ $ docker run -d \
   --env "SERVICE_USER=app" \
   --env "SERVICE_USER_GROUP=app-www" \
   --env "SERVICE_USER_PASSWORD=" \
-  -v /var/services-data/apache-php/app-1:/var/www/app-1 \
+  -v volume-data.apache-php.app-1.1.1:/var/www/app-1 \
   jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
 
@@ -232,7 +232,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "DATE_TIMEZONE=UTC" \
   --volumes-from volume-config.apache-php.app-1.1.1 \
-  -v /var/services-data/apache-php/app-1:/var/www/app \
+  -v volume-data.apache-php.app-1.1.1:/var/www/app \
   jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
 
@@ -322,7 +322,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
   --env "DATE_TIMEZONE=UTC" \
-  -v /var/services-data/apache-php/app-1:/var/www/app \
+  -v volume-data.apache-php.app-1.1.1:/var/www/app \
   jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
 
@@ -333,7 +333,7 @@ The home directory of the service user and parent directory of the Apache Docume
 ```
 ...
   --env "APP_HOME_DIR=/var/www/app-1" \
-  -v /var/services-data/apache-php/app-1:/var/www/app-1 \
+  -v volume-data.apache-php.app-1.1.1:/var/www/app-1 \
 ...
 ```
 
