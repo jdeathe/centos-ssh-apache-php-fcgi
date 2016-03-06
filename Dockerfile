@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.4.2
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.4.3
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -61,26 +61,32 @@ RUN ln -sf /etc/services-config/httpd/apache-bootstrap.conf /etc/apache-bootstra
 # -----------------------------------------------------------------------------
 # Set default environment variables used to identify the service container
 # -----------------------------------------------------------------------------
-ENV SERVICE_UNIT_APP_GROUP app-1
-ENV SERVICE_UNIT_LOCAL_ID 1
-ENV SERVICE_UNIT_INSTANCE 1
+# ENV SERVICE_UNIT_APP_GROUP app-1
+# ENV SERVICE_UNIT_LOCAL_ID 1
+# ENV SERVICE_UNIT_INSTANCE 1
 
 # -----------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
 # -----------------------------------------------------------------------------
-ENV APACHE_EXTENDED_STATUS_ENABLED false
-ENV APACHE_LOAD_MODULES "authz_user_module log_config_module expires_module deflate_module headers_module setenvif_module mime_module status_module dir_module alias_module"
-ENV APACHE_MOD_SSL_ENABLED false
-ENV APACHE_SERVER_ALIAS ""
-ENV APACHE_SERVER_NAME app-1.local
-ENV APP_HOME_DIR /var/www/app
-ENV DATE_TIMEZONE UTC
+# ENV APACHE_CONTENT_ROOT /var/www/${PACKAGE_NAME}
+# ENV APACHE_CUSTOM_LOG_FORMAT combined
+# ENV APACHE_CUSTOM_LOG_LOCATION ${APACHE_CONTENT_ROOT}/var/log/apache_access_log
+# ENV APACHE_ERROR_LOG_LOCATION ${APACHE_CONTENT_ROOT}/var/log/apache_error_log
+# ENV APACHE_ERROR_LOG_LEVEL warn
+# ENV APACHE_EXTENDED_STATUS_ENABLED false
+# ENV APACHE_LOAD_MODULES "authz_user_module log_config_module expires_module deflate_module headers_module setenvif_module mime_module status_module dir_module alias_module"
+# ENV APACHE_MOD_SSL_ENABLED false
+# ENV APACHE_PUBLIC_DIRECTORY public_html
+# ENV APACHE_RUN_GROUP app-www
+# ENV APACHE_RUN_USER app-www
+# ENV APACHE_SERVER_ALIAS ""
+# ENV APACHE_SERVER_NAME app-1.local
+# ENV APACHE_SUEXEC_USER_GROUP false
+# ENV APACHE_SYSTEM_USER app
 ENV HTTPD /usr/sbin/httpd.worker
-ENV SERVICE_USER app
-ENV SERVICE_USER_GROUP app-www
-ENV SERVICE_USER_PASSWORD ""
-ENV SUEXECUSERGROUP false
+# ENV PACKAGE_PATH ${PACKAGE_PATH}
+# ENV PHP_OPTIONS_DATE_TIMEZONE UTC
 
-EXPOSE 80 8443 443
+# EXPOSE 80 8443 443
 
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
