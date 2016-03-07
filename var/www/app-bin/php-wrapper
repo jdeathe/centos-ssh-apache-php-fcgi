@@ -5,6 +5,7 @@ source /etc/apache-bootstrap.conf
 # Allow PHP settings to be varied by passing a parameter to php-wrapper
 PHP_VERSION=$1
 PHP_WRAPPER_MODE=$2
+
 # VirtualHost specific options can be used to override the PHP options set in the wrapper
 PHP_VHOST_OPTIONS=$3
 
@@ -56,7 +57,7 @@ if [[ ${DB_MYSQL_PORT_3306_TCP_PORT} == '${DB_MYSQL_PORT_3306_TCP_PORT}' ]]; the
 	export DB_MYSQL_PORT_3306_TCP_PORT=
 fi
 
-export TMP="${APP_HOME_DIR}/var/tmp"
+export TMP="${APACHE_CONTENT_ROOT}/var/tmp"
 export TEMP=${TMP}
 export TMPDIR=${TMP}
 
@@ -64,7 +65,7 @@ export TMPDIR=${TMP}
 
 ## Important: Make sure you do not add spaces in this setting
 PHP_OPTIONS_DISABLE_FUNCTIONS="system,exec,passthru,shell_exec,proc_open,show_source,popen,pcntl_fork,pcntl_exec,escapeshellarg,escapeshellcmd,openlog,closelog,uname,php_uname"
-PHP_OPTIONS_OPEN_BASE_DIR="${APP_HOME_DIR}/"
+PHP_OPTIONS_OPEN_BASE_DIR="${APACHE_CONTENT_ROOT}"
 
 PHP_OPTIONS_MEMORY_LIMIT="32M"
 PHP_OPTIONS_POST_MAX_SIZE="32M"
@@ -119,8 +120,8 @@ esac
 
 PHP_OPTIONS="
  -d disable_functions=${PHP_OPTIONS_DISABLE_FUNCTIONS}
- -d open_basedir=${APP_HOME_DIR}
- -d include_path=${APP_HOME_DIR}
+ -d open_basedir=${APACHE_CONTENT_ROOT}
+ -d include_path=${APACHE_CONTENT_ROOT}
  -d expose_php=Off
  -d allow_url_fopen=Off
  -d magic_quotes_sybase=Off
@@ -133,13 +134,13 @@ PHP_OPTIONS="
  -d mysqli.reconnect=On
  -d register_globals=Off
  -d default_charset=UTF-8
- -d date.timezone=UTC
+ -d date.timezone=${PHP_OPTIONS_DATE_TIMEZONE:-UTC}
  -d error_reporting=${PHP_OPTIONS_ERROR_REPORTING}
  -d display_errors=${PHP_OPTIONS_DISPLAY_ERRORS}
  -d log_errors=On
- -d error_log=${APP_HOME_DIR}/var/log/php_error_log
+ -d error_log=${APACHE_CONTENT_ROOT}/var/log/php_error_log
  -d html_errors=${PHP_OPTIONS_HTML_ERRORS}
- -d session.save_path=${APP_HOME_DIR}/var/session
+ -d session.save_path=${APACHE_CONTENT_ROOT}/var/session
  -d session.name=app-session 
  -d session.cookie_httponly=1
  -d session.hash_function=sha256
