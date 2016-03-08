@@ -3,7 +3,7 @@
 source /etc/apache-bootstrap.conf
 
 # Allow PHP settings to be varied by passing a parameter to php-wrapper
-PHP_VERSION=${1}
+PHP_PACKAGE_NAME=${1}
 
 # Mode of opperation: production,development,debug.
 # Used to enable appropriate php options for requirements
@@ -27,35 +27,30 @@ export REDIRECT_STATUS=200
 X_NICE=/bin/nice
 NICENESS_PHP_CGI=15
 
-PHP54_INSTALLED=false
-PHP54_X_CGI=/opt/rh/php54/root/usr/bin/php-cgi
+# Default to the default distribution version
+X_PHP_CGI=/usr/bin/php-cgi
 
-if [[ -f /opt/rh/php54/enable ]]; then
-	PHP54_INSTALLED=true
-	source /opt/rh/php54/enable
-	export X_SCLS="$(scl enable php54 'echo $X_SCLS')"
-fi
+if [[ ${PHP_PACKAGE_NAME} == rh-php56 ]] \
+	&& [[ -f /opt/rh/rh-php56/enable ]] \
+	&& [[ -f /opt/rh/rh-php56/root/usr/bin/php-cgi ]]; then
+	source /opt/rh/rh-php56/enable
+	export X_SCLS="$(scl enable rh-php56 'echo $X_SCLS')"
 
-PHP55_INSTALLED=false
-PHP55_X_CGI=/opt/rh/php55/root/usr/bin/php-cgi
-
-if [[ -f /opt/rh/php55/enable ]]; then
-	PHP55_INSTALLED=true
+	X_PHP_CGI=/opt/rh/rh-php56/root/usr/bin/php-cgi
+elif [[ ${PHP_PACKAGE_NAME} == php55 ]] \
+	&& [[ -f /opt/rh/php55/enable ]] \
+	&& [[ -f /opt/rh/php55/root/usr/bin/php-cgi ]]; then
 	source /opt/rh/php55/enable
 	export X_SCLS="$(scl enable php55 'echo $X_SCLS')"
-fi
 
-if [[ ${PHP_VERSION} == php55 ]] \
-	&& [[ ${PHP55_INSTALLED} == true ]] \
-	&& [[ -f ${PHP55_X_CGI} ]]; then
-	X_PHP_CGI=${PHP55_X_CGI}
-elif [[ ${PHP_VERSION} == php54 ]] \
-	&& [[ ${PHP54_INSTALLED} == true ]] \
-	&& [[ -f ${PHP54_X_CGI} ]]; then
-	X_PHP_CGI=${PHP54_X_CGI}
-else
-	# Default to the default distribution version
-	X_PHP_CGI=/usr/bin/php-cgi
+	X_PHP_CGI=/opt/rh/php55/root/usr/bin/php-cgi
+elif [[ ${PHP_PACKAGE_NAME} == php54 ]] \
+	&& [[ -f /opt/rh/php54/enable ]] \
+	&& [[ -f /opt/rh/php54/root/usr/bin/php-cgi ]]; then
+	source /opt/rh/php54/enable
+	export X_SCLS="$(scl enable php54 'echo $X_SCLS')"
+
+	X_PHP_CGI=/opt/rh/php54/root/usr/bin/php-cgi
 fi
 
 # Unset MySQL environment variables if they are not set in the vhost
