@@ -1,69 +1,66 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 source /etc/apache-bootstrap.conf
 
 # Allow PHP settings to be varied by passing a parameter to php-wrapper
-PHP_VERSION=$1
-PHP_WRAPPER_MODE=$2
+PHP_PACKAGE_NAME=${1}
 
-# VirtualHost specific options can be used to override the PHP options set in the wrapper
-PHP_VHOST_OPTIONS=$3
+# Mode of opperation: production,development,debug.
+# Used to enable appropriate php options for requirements
+PHP_WRAPPER_MODE=${2}
+
+# VirtualHost specific options can be used to override the PHP options set in 
+# this wrapper
+PHP_VHOST_OPTIONS=${3}
 
 # Set path to php.ini
 export PHPRC=/etc
 
+# PHP child process management should always be disabled with mod_fcgid
+export PHP_FCGI_CHILDREN=0
 export PHP_FCGI_MAX_REQUESTS=15000
 
-# PHP child process management (PHP_FCGI_CHILDREN) should always be disabled with mod_fcgid
-export PHP_FCGI_CHILDREN=0
-
 export REDIRECT_STATUS=200
-
-X_NICE="/bin/nice"
-NICENESS_PHP_CGI="15"
-
-PHP54_INSTALLED="false"
-PHP54_X_CGI=/opt/rh/php54/root/usr/bin/php-cgi
-
-if [[ -f /opt/rh/php54/enable ]]; then
-	PHP54_INSTALLED="true"
-	source /opt/rh/php54/enable
-	export X_SCLS="$(scl enable php54 'echo $X_SCLS')"
-fi
-
-PHP55_INSTALLED="false"
-PHP55_X_CGI=/opt/rh/php55/root/usr/bin/php-cgi
-
-if [[ -f /opt/rh/php55/enable ]]; then
-	PHP55_INSTALLED="true"
-	source /opt/rh/php55/enable
-	export X_SCLS="$(scl enable php55 'echo $X_SCLS')"
-fi
-
-if [[ ${PHP_VERSION} == "php55" ]] && [[ "PHP55_INSTALLED" == "true" ]] && [[ -f ${PHP55_X_CGI} ]]; then
-	X_PHP_CGI="${PHP55_X_CGI}"
-elif [[ ${PHP_VERSION} == "php54" ]] && [[ "PHP54_INSTALLED" == "true" ]] && [[ -f ${PHP54_X_CGI} ]]; then
-	X_PHP_CGI="${PHP54_X_CGI}"
-else
-	# Default to the default distribution version
-	X_PHP_CGI="/usr/bin/php-cgi"
-fi
-
-# Unset MySQL host address and port environment variables if they are not set in the vhost
-if [[ ${DB_MYSQL_PORT_3306_TCP_ADDR} == '${DB_MYSQL_PORT_3306_TCP_ADDR}' ]]; then
-	export DB_MYSQL_PORT_3306_TCP_ADDR=
-fi
-if [[ ${DB_MYSQL_PORT_3306_TCP_PORT} == '${DB_MYSQL_PORT_3306_TCP_PORT}' ]]; then
-	export DB_MYSQL_PORT_3306_TCP_PORT=
-fi
-
 export TMP="${APACHE_CONTENT_ROOT}/var/tmp"
 export TEMP=${TMP}
 export TMPDIR=${TMP}
 
-# PHP Configuration Options that may need to be customised for different app features
+X_NICE=/bin/nice
+X_PHP_CGI_NICENESS=15
+X_PHP_CGI=/usr/bin/php-cgi
 
-## Important: Make sure you do not add spaces in this setting
+if [[ ${PHP_PACKAGE_NAME} == rh-php56 ]] \
+	&& [[ -f /opt/rh/rh-php56/enable ]] \
+	&& [[ -f /opt/rh/rh-php56/root/usr/bin/php-cgi ]]; then
+	source /opt/rh/rh-php56/enable
+	export X_SCLS="$(scl enable rh-php56 'echo $X_SCLS')"
+
+	X_PHP_CGI=/opt/rh/rh-php56/root/usr/bin/php-cgi
+elif [[ ${PHP_PACKAGE_NAME} == php55 ]] \
+	&& [[ -f /opt/rh/php55/enable ]] \
+	&& [[ -f /opt/rh/php55/root/usr/bin/php-cgi ]]; then
+	source /opt/rh/php55/enable
+	export X_SCLS="$(scl enable php55 'echo $X_SCLS')"
+
+	X_PHP_CGI=/opt/rh/php55/root/usr/bin/php-cgi
+elif [[ ${PHP_PACKAGE_NAME} == php54 ]] \
+	&& [[ -f /opt/rh/php54/enable ]] \
+	&& [[ -f /opt/rh/php54/root/usr/bin/php-cgi ]]; then
+	source /opt/rh/php54/enable
+	export X_SCLS="$(scl enable php54 'echo $X_SCLS')"
+
+	X_PHP_CGI=/opt/rh/php54/root/usr/bin/php-cgi
+fi
+
+# Unset MySQL environment variables if they are not set in the vhost
+if [[ ${DB_MYSQL_PORT_3306_TCP_ADDR} == '${DB_MYSQL_PORT_3306_TCP_ADDR}' ]]; then
+	unset DB_MYSQL_PORT_3306_TCP_ADDR
+fi
+
+if [[ ${DB_MYSQL_PORT_3306_TCP_PORT} == '${DB_MYSQL_PORT_3306_TCP_PORT}' ]]; then
+	unset DB_MYSQL_PORT_3306_TCP_PORT
+fi
+
 PHP_OPTIONS_DISABLE_FUNCTIONS="system,exec,passthru,shell_exec,proc_open,show_source,popen,pcntl_fork,pcntl_exec,escapeshellarg,escapeshellcmd,openlog,closelog,uname,php_uname"
 PHP_OPTIONS_OPEN_BASE_DIR="${APACHE_CONTENT_ROOT}"
 
@@ -71,13 +68,14 @@ PHP_OPTIONS_MEMORY_LIMIT="32M"
 PHP_OPTIONS_POST_MAX_SIZE="32M"
 PHP_OPTIONS_UPLOAD_MAX_FILESIZE="24M"
 
-PHP_OPTIONS_DISPLAY_ERRORS="Off"
-PHP_OPTIONS_HTML_ERRORS="Off"
-# We use the numeric values here - found for environment with php -r "echo E_ALL & ~E_DEPRECATED;"
+# Use numeric values here. 
+# To identify the correct value use: php -r "echo E_ALL & ~E_DEPRECATED;"
 #   Default Value: E_ALL & ~E_NOTICE        = 30711
 #   Development Value: E_ALL | E_STRICT     = 32767
 #   Production Value: E_ALL & ~E_DEPRECATED = 22527
 PHP_OPTIONS_ERROR_REPORTING=22527
+PHP_OPTIONS_DISPLAY_ERRORS="Off"
+PHP_OPTIONS_HTML_ERRORS="Off"
 
 PHP_OPTIONS_XDEBUG_SHOW_EXCEPTION_TRACE="Off"
 PHP_OPTIONS_XDEBUG_TRACE_ENABLE_TRIGGER="Off"
@@ -90,7 +88,7 @@ PHP_OPTIONS_XDEBUG_REMOTE_MODE="req"
 PHP_OPTIONS_XDEBUG_REMOTE_CONNECT_BACK="Off"
 PHP_OPTIONS_XDEBUG_PROFILER_ENABLE_TRIGGER="Off"
 
-# The PHP options can be set appropriately for development / debug / production use
+# Set the PHP options appropriately for requirements
 case ${PHP_WRAPPER_MODE} in
 	development|debug)
 		PHP_OPTIONS_DISPLAY_ERRORS="On"
@@ -174,4 +172,8 @@ PHP_OPTIONS="
 "
 
 # FastCGI-enabled PHP executable
-exec ${X_NICE} -n ${NICENESS_PHP_CGI} ${X_PHP_CGI} ${PHP_OPTIONS} ${PHP_VHOST_OPTIONS}
+exec ${X_NICE} \
+	-n ${X_PHP_CGI_NICENESS} \
+	${X_PHP_CGI} \
+	${PHP_OPTIONS} \
+	${PHP_VHOST_OPTIONS}
