@@ -16,18 +16,17 @@ PHP_VHOST_OPTIONS=${3}
 # Set path to php.ini
 export PHPRC=/etc
 
+# PHP child process management should always be disabled with mod_fcgid
+export PHP_FCGI_CHILDREN=0
 export PHP_FCGI_MAX_REQUESTS=15000
 
-# PHP child process management (PHP_FCGI_CHILDREN) should always be disabled 
-# with mod_fcgid
-export PHP_FCGI_CHILDREN=0
-
 export REDIRECT_STATUS=200
+export TMP="${APACHE_CONTENT_ROOT}/var/tmp"
+export TEMP=${TMP}
+export TMPDIR=${TMP}
 
 X_NICE=/bin/nice
-NICENESS_PHP_CGI=15
-
-# Default to the default distribution version
+X_PHP_CGI_NICENESS=15
 X_PHP_CGI=/usr/bin/php-cgi
 
 if [[ ${PHP_PACKAGE_NAME} == rh-php56 ]] \
@@ -61,10 +60,6 @@ fi
 if [[ ${DB_MYSQL_PORT_3306_TCP_PORT} == '${DB_MYSQL_PORT_3306_TCP_PORT}' ]]; then
 	unset DB_MYSQL_PORT_3306_TCP_PORT
 fi
-
-export TMP="${APACHE_CONTENT_ROOT}/var/tmp"
-export TEMP=${TMP}
-export TMPDIR=${TMP}
 
 PHP_OPTIONS_DISABLE_FUNCTIONS="system,exec,passthru,shell_exec,proc_open,show_source,popen,pcntl_fork,pcntl_exec,escapeshellarg,escapeshellcmd,openlog,closelog,uname,php_uname"
 PHP_OPTIONS_OPEN_BASE_DIR="${APACHE_CONTENT_ROOT}"
@@ -178,7 +173,7 @@ PHP_OPTIONS="
 
 # FastCGI-enabled PHP executable
 exec ${X_NICE} \
-	-n ${NICENESS_PHP_CGI} \
+	-n ${X_PHP_CGI_NICENESS} \
 	${X_PHP_CGI} \
 	${PHP_OPTIONS} \
 	${PHP_VHOST_OPTIONS}
