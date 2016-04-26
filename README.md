@@ -35,11 +35,7 @@ Run up a container named ```apache-php.app-1.1.1``` from the docker image ```jde
 $ docker run -d \
   --name apache-php.app-1.1.1 \
   -p 8080:80 \
-  --env "SERVICE_UNIT_APP_GROUP=app-1" \
-  --env "SERVICE_UNIT_LOCAL_ID=1" \
-  --env "SERVICE_UNIT_INSTANCE=1" \
   --env "APACHE_SERVER_NAME=app-1.local" \
-  --env "PHP_OPTIONS_DATE_TIMEZONE=UTC" \
   -v /var/www \
   jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
@@ -71,7 +67,7 @@ $ docker inspect \
   apache-php.app-1.1.1
 ```
 
-On first run, the bootstrap script, ([/etc/apache-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/apache-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will populate it with the example app scripts and VirtualHost configuration files. If you place your own app in this directory it will not be overwritten but you must ensure to include at least a vhost.conf file and, if enabling SSL a vhost-ssl.conf file too.
+On first run, the bootstrap script, ([/etc/apache-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/apache-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will populate it with the example app scripts and VirtualHost configuration files. If you place your own app in this directory it will not be overwritten but you must ensure to include at least a vhost.conf file and, if enabling SSL a vhost-ssl.conf file too.
 
 The ```apachectl``` command can be accessed as follows.
 
@@ -142,15 +138,7 @@ $ docker run \
 ```
 
 ##### Populating Named configuration data volumes  
-When using named volumes the directory path from the docker host mounts the path on the container so we need to upload the configuration files. The simplest method of achieving this is to upload the contents of the [etc/services-config](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/) directory using ```docker cp```.
-
-```
-$ docker cp \
-  ./etc/services-config/. \
-  volume-config.apache-php.app-1.1.1:/etc/services-config
-```
-
-If you don't have a copy of the required configuration files locally you can run a temporary container as the source of the configuration files and use `docker cp` to stream the files into the named data volume container.
+When using named volumes the directory path from the docker host mounts the path on the container so we need to upload the configuration files. The simplest method of achieving this is to run a temporary container as the source of the configuration files and use `docker cp` to stream the files into the named data volume container.
 
 ```
 $ docker run -d \
@@ -179,10 +167,10 @@ $ docker run --rm -it \
 
 The following configuration files are required to run the application container and should be located in the directory /etc/services-config/.
 
-- [httpd/conf/httpd.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/conf/httpd.conf)
-- [httpd/conf.d/php.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/conf.d/php.conf)
-- [httpd/conf.d/ssl.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/conf.d/ssl.conf)
-- [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
+- [httpd/conf/httpd.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/conf/httpd.conf)
+- [httpd/conf.d/fcgid.conf](https://github.com/jdeathe/centos-ssh-apache-php-fgci/blob/centos-6/etc/services-config/httpd/conf.d/fcgid.conf)
+- [httpd/conf.d/ssl.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/conf.d/ssl.conf)
+- [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
 
 ### Running
 
@@ -198,9 +186,6 @@ $ docker stop apache-php.app-1.1.1 && \
 $ docker run -d \
   --name apache-php.app-1.1.1 \
   -p 8080:80 \
-  --env "SERVICE_UNIT_INSTANCE=app-1" \
-  --env "SERVICE_UNIT_LOCAL_ID=1" \
-  --env "SERVICE_UNIT_INSTANCE=1" \
   --env "APACHE_CONTENT_ROOT=/var/www/app-1" \
   --env "APACHE_CUSTOM_LOG_FORMAT=combined" \
   --env "APACHE_CUSTOM_LOG_LOCATION=/var/www/app-1/var/log/apache_access_log" \
@@ -215,6 +200,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_SYSTEM_USER=app" \
   --env "PHP_OPTIONS_DATE_TIMEZONE=UTC" \
+  --env "SERVICE_UID=app-1.1.1" \
   -v volume-data.apache-php.app-1.1.1:/var/www \
   jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
@@ -229,12 +215,10 @@ $ docker stop apache-php.app-1.1.1 && \
 $ docker run -d \
   --name apache-php.app-1.1.1 \
   -p 8080:80 \
-  --env "SERVICE_UNIT_INSTANCE=app-1" \
-  --env "SERVICE_UNIT_LOCAL_ID=1" \
-  --env "SERVICE_UNIT_INSTANCE=1" \
   --env "APACHE_SERVER_ALIAS=app-1" \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "PHP_OPTIONS_DATE_TIMEZONE=UTC" \
+  --env "SERVICE_UID=app-1.1.1" \
   --volumes-from volume-config.apache-php.app-1.1.1 \
   -v volume-data.apache-php.app-1.1.1:/var/www \
   jdeathe/centos-ssh-apache-php-fcgi:latest
@@ -248,21 +232,7 @@ $ docker logs apache-php.app-1.1.1
 
 The output of the logs should show the Apache modules being loaded and auto-generated password for the Apache user and group, (if not try again after a few seconds).
 
-#### Runtime Environment Variables
-
-There are several environmental variables defined at runtime these allow the operator to customise the running container which may become necessary when running several on the same docker host, when clustering docker hosts or to simply set the timezone.
-
-##### SERVICE_UNIT_INSTANCE, SERVICE_UNIT_LOCAL_ID & SERVICE_UNIT_INSTANCE
-
-The ```SERVICE_UNIT_INSTANCE```, ```SERVICE_UNIT_LOCAL_ID``` and ```SERVICE_UNIT_INSTANCE``` environmental variables are used to set a response header named ```X-Service-Uid``` that lets you identify the container that is serving the content. This is useful when you have many containers running on a single host using different ports (i.e with different ```SERVICE_UNIT_LOCAL_ID``` values) or if you are running a cluster and need to identify which host the content is served from (i.e with different ```SERVICE_UNIT_INSTANCE``` values). The three values should map to the last 3 dotted values of the container name; in our case that is "app-1.1.1"
-
-```
-...
-  --env "SERVICE_UNIT_APP_GROUP=app-1" \
-  --env "SERVICE_UNIT_LOCAL_ID=1" \
-  --env "SERVICE_UNIT_INSTANCE=1" \
-...
-```
+#### Environment Variables
 
 ##### APACHE_SERVER_NAME & APACHE_SERVER_ALIAS
 
@@ -272,6 +242,16 @@ The ```APACHE_SERVER_NAME``` and ```APACHE_SERVER_ALIAS``` environmental variabl
 ...
   --env "APACHE_SERVER_ALIAS=app-1" \
   --env "APACHE_SERVER_NAME=app-1.local" \
+...
+```
+
+##### APACHE_CONTENT_ROOT
+
+The home directory of the service user and parent directory of the Apache DocumentRoot is /var/www/app by default but can be changed if necessary using the ```APACHE_CONTENT_ROOT``` environment variable.
+
+```
+...
+  --env "APACHE_CONTENT_ROOT=/var/www/app-1" \
 ...
 ```
 
@@ -288,7 +268,7 @@ The Apache CustomLog can be defined using ```APACHE_CUSTOM_LOG_LOCATION``` to se
 ...
 ```
 
-##### APACHE_ERROR_LOG_LOCATION && APACHE_ERROR_LOG_LEVEL
+##### APACHE_ERROR_LOG_LOCATION & APACHE_ERROR_LOG_LEVEL
 
 The Apache ErrorLog can be defined using ```APACHE_ERROR_LOG_LOCATION``` to set a file | pipe location and ```APACHE_ERROR_LOG_LEVEL``` to specify the required LogLevel value.
 
@@ -314,8 +294,8 @@ You can view the output from Apache server-status either using the elinks browse
 ```
 $ docker exec -it apache-php.app-1.1.1 \
   env TERM=xterm \
-  watch -n 10 \
-  -d "curl -s http://app-1/_httpdstatus?auto"
+  watch -n 1 \
+  -d "curl -s http://app-1/server-status?auto"
 ```
 
 ##### APACHE_LOAD_MODULES
@@ -363,16 +343,6 @@ The Apache process is run by the User and Group defined by ```APACHE_RUN_USER```
 ...
 ```
 
-##### APACHE_CONTENT_ROOT
-
-The home directory of the service user and parent directory of the Apache DocumentRoot is /var/www/app by default but can be changed if necessary using the ```APACHE_CONTENT_ROOT``` environment variable.
-
-```
-...
-  --env "APACHE_CONTENT_ROOT=/var/www/app-1" \
-...
-```
-
 ##### APACHE_PUBLIC_DIRECTORY
 
 The public directory is relative to the ```APACHE_CONTENT_ROOT``` and together they form the Apache DocumentRoot path. The default value is `public_html` and should not be changed unless changes are made to the source of the app to include an alternative public directory such as `web` or `public`.
@@ -380,6 +350,16 @@ The public directory is relative to the ```APACHE_CONTENT_ROOT``` and together t
 ```
 ...
   --env "APACHE_PUBLIC_DIRECTORY=web" \
+...
+```
+
+##### APACHE_SYSTEM_USER
+
+Use the ```APACHE_SYSTEM_USER``` environment variable to define a custom service username.
+
+```
+...
+  --env "APACHE_SYSTEM_USER=app-1" \
 ...
 ```
 
@@ -395,13 +375,13 @@ To set the timezone for the UK and account for British Summer Time you would use
 ...
 ```
 
-##### APACHE_SYSTEM_USER
+##### SERVICE_UID
 
-Use the ```APACHE_SYSTEM_USER``` environment variable to define a custom service username.
+The ```SERVICE_UID``` environmental variable is used to set a response header named ```X-Service-Uid``` that lets you identify the container that is serving the content. This is useful when you have many containers running on a single host using different ports or if you are running a cluster and need to identify which host the content is served from. The default value is set to the Service Unit's App Group Name, Local ID and Instance ID.
 
 ```
 ...
-  --env "APACHE_SYSTEM_USER=app-1" \
+  --env "SERVICE_UID=app-1.1.1" \
 ...
 ```
 
@@ -409,7 +389,7 @@ Use the ```APACHE_SYSTEM_USER``` environment variable to define a custom service
 
 If using the optional data volume for container configuration you are able to customise the configuration. In the following examples your custom docker configuration files should be located on the Docker host under the directory ```/var/lib/docker/volumes/<volume-name>/``` where ```<container-name>``` should match the applicable container name such as "apache-php.app-1.1.1" if using named volumes or will be an ID generated automatically by Docker. To identify the correct path on the Docker host use the ```docker inspect``` command.
 
-#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
+#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
 
 The bootstrap script initialises the app. It sets up the Apache service user + group, generates passwords, enables Apache modules and adds/removes SSL support.
 
@@ -433,6 +413,6 @@ To override the SSLCertificateKeyFile add it to your config directory using the 
 
 *Note:* You must also specify the associated SSLCertificateFile in this case.
 
-#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
+#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
 
 The supervisor service's configuration can also be overridden by editing the custom supervisord.conf file. It shouldn't be necessary to change the existing configuration here but you could include more [program:x] sections to run additional commands at startup.
