@@ -168,6 +168,7 @@ docker run \
 	--env "APACHE_SYSTEM_USER=${APACHE_SYSTEM_USER}" \
 	--env "HTTPD=${HTTPD}" \
 	--env "PHP_OPTIONS_DATE_TIMEZONE=${PHP_OPTIONS_DATE_TIMEZONE}" \
+	--env "SERVICE_UID=${SERVICE_UID}" \
 	${DOCKER_VOLUMES_FROM:-} \
 	${DOCKER_IMAGE_REPOSITORY_NAME}${@:+ -c }"${@}"
 )
@@ -201,6 +202,7 @@ docker run \
 # 	--env "APACHE_SYSTEM_USER=app" \
 # 	--env "HTTPD=/usr/sbin/httpd.worker" \
 # 	--env "PHP_OPTIONS_DATE_TIMEZONE=Europe/London" \
+# 	--env "SERVICE_UID=app-1.1.1" \
 # 	${DOCKER_VOLUMES_FROM:-} \
 # 	${DOCKER_IMAGE_REPOSITORY_NAME}${@:+ -c }"${@}"
 # )
