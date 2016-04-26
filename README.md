@@ -67,7 +67,7 @@ $ docker inspect \
   apache-php.app-1.1.1
 ```
 
-On first run, the bootstrap script, ([/etc/apache-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/apache-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will populate it with the example app scripts and VirtualHost configuration files. If you place your own app in this directory it will not be overwritten but you must ensure to include at least a vhost.conf file and, if enabling SSL a vhost-ssl.conf file too.
+On first run, the bootstrap script, ([/etc/apache-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/apache-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will populate it with the example app scripts and VirtualHost configuration files. If you place your own app in this directory it will not be overwritten but you must ensure to include at least a vhost.conf file and, if enabling SSL a vhost-ssl.conf file too.
 
 The ```apachectl``` command can be accessed as follows.
 
@@ -138,15 +138,7 @@ $ docker run \
 ```
 
 ##### Populating Named configuration data volumes  
-When using named volumes the directory path from the docker host mounts the path on the container so we need to upload the configuration files. The simplest method of achieving this is to upload the contents of the [etc/services-config](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/) directory using ```docker cp```.
-
-```
-$ docker cp \
-  ./etc/services-config/. \
-  volume-config.apache-php.app-1.1.1:/etc/services-config
-```
-
-If you don't have a copy of the required configuration files locally you can run a temporary container as the source of the configuration files and use `docker cp` to stream the files into the named data volume container.
+When using named volumes the directory path from the docker host mounts the path on the container so we need to upload the configuration files. The simplest method of achieving this is to run a temporary container as the source of the configuration files and use `docker cp` to stream the files into the named data volume container.
 
 ```
 $ docker run -d \
@@ -175,10 +167,11 @@ $ docker run --rm -it \
 
 The following configuration files are required to run the application container and should be located in the directory /etc/services-config/.
 
-- [httpd/conf/httpd.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/conf/httpd.conf)
-- [httpd/conf.d/php.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/conf.d/php.conf)
-- [httpd/conf.d/ssl.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/conf.d/ssl.conf)
-- [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
+- [httpd/conf/httpd.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/conf/httpd.conf)
+- [httpd/conf.d/fcgid.conf](https://github.com/jdeathe/centos-ssh-apache-php-fgci/blob/centos-6/etc/services-config/httpd/conf.d/fcgid.conf)
+- [httpd/conf.d/php.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/conf.d/php.conf)
+- [httpd/conf.d/ssl.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/conf.d/ssl.conf)
+- [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
 
 ### Running
 
@@ -397,7 +390,7 @@ The ```SERVICE_UID``` environmental variable is used to set a response header na
 
 If using the optional data volume for container configuration you are able to customise the configuration. In the following examples your custom docker configuration files should be located on the Docker host under the directory ```/var/lib/docker/volumes/<volume-name>/``` where ```<container-name>``` should match the applicable container name such as "apache-php.app-1.1.1" if using named volumes or will be an ID generated automatically by Docker. To identify the correct path on the Docker host use the ```docker inspect``` command.
 
-#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
+#### [httpd/apache-bootstrap.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/httpd/apache-bootstrap.conf)
 
 The bootstrap script initialises the app. It sets up the Apache service user + group, generates passwords, enables Apache modules and adds/removes SSL support.
 
@@ -421,6 +414,6 @@ To override the SSLCertificateKeyFile add it to your config directory using the 
 
 *Note:* You must also specify the associated SSLCertificateFile in this case.
 
-#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
+#### [supervisor/supervisord.conf](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/etc/services-config/supervisor/supervisord.conf)
 
 The supervisor service's configuration can also be overridden by editing the custom supervisord.conf file. It shouldn't be necessary to change the existing configuration here but you could include more [program:x] sections to run additional commands at startup.
