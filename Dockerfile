@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.4.5
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.5.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -13,10 +13,10 @@ MAINTAINER James Deathe <james.deathe@gmail.com>
 # -----------------------------------------------------------------------------
 RUN rpm --rebuilddb \
 	&& yum -y erase \
-	php-5.3.3-46.el6_6 \
+	php-5.3.3-48.el6_8 \
 	&& yum --setopt=tsflags=nodocs -y install \
-	fcgi-2.4.0-12.el6 \
-	mod_fcgid-2.3.9-1.el6 \
+	fcgi.x86_64 0:2.4.0-12.el6 \
+	mod_fcgid.x86_64 0:2.3.9-1.el6 \
 	&& yum versionlock add \
 	fcgi \
 	mod_fcgid \
@@ -26,12 +26,15 @@ RUN rpm --rebuilddb \
 # -----------------------------------------------------------------------------
 # Copy files into place
 # -----------------------------------------------------------------------------
-ADD etc/services-config/httpd/conf.d/fcgid.conf /etc/services-config/httpd/conf.d/
-RUN ln -sf /etc/services-config/httpd/conf.d/fcgid.conf /etc/httpd/conf.d/fcgid.conf
+ADD etc/services-config/httpd/conf.d/fcgid.conf \
+	/etc/services-config/httpd/conf.d/
+RUN ln -sf \
+	/etc/services-config/httpd/conf.d/fcgid.conf \
+	/etc/httpd/conf.d/fcgid.conf
 
 # -----------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
 # -----------------------------------------------------------------------------
-ENV HTTPD /usr/sbin/httpd.worker
+ENV HTTPD="/usr/sbin/httpd.worker"
 
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
