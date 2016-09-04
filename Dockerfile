@@ -15,8 +15,8 @@ RUN rpm --rebuilddb \
 	&& yum -y erase \
 	php-5.3.3-48.el6_8 \
 	&& yum --setopt=tsflags=nodocs -y install \
-	fcgi.x86_64 0:2.4.0-12.el6 \
-	mod_fcgid.x86_64 0:2.3.9-1.el6 \
+	fcgi-2.4.0-12.el6 \
+	mod_fcgid-2.3.9-1.el6 \
 	&& yum versionlock add \
 	fcgi \
 	mod_fcgid \
