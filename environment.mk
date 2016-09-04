@@ -2,7 +2,7 @@
 # Constants
 # -----------------------------------------------------------------------------
 DOCKER_USER := jdeathe
-DOCKER_IMAGE_NAME := centos-ssh-apache-php
+DOCKER_IMAGE_NAME := centos-ssh-apache-php-fcgi
 
 # Tag validation patterns
 DOCKER_IMAGE_TAG_PATTERN := ^(latest|(centos-[6-7])|(centos-(6-1|7-2).[0-9]+.[0-9]+))$
