@@ -19,7 +19,7 @@ If enabling and configuring SSH access, it is by public key authentication and, 
 
 ### SSH Alternatives
 
-SSH is not required in order to access a terminal for the running container. The simplest method is to use the docker exec command to run bash (or sh) as follows: 
+SSH is not required in order to access a terminal for the running container. The simplest method is to use the docker exec command to run bash (or sh) as follows:
 
 ```
 $ docker exec -it <docker-name-or-id> bash
@@ -328,6 +328,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
   --env "PHP_OPTIONS_DATE_TIMEZONE=UTC" \
+  --env "SERVICE_UID=app-1.1.1" \
   -v volume-data.apache-php.app-1.1.1:/var/www \
   jdeathe/centos-ssh-apache-php-fcgi:latest
 ```
@@ -377,11 +378,11 @@ To set the timezone for the UK and account for British Summer Time you would use
 
 ##### SERVICE_UID
 
-The ```SERVICE_UID``` environmental variable is used to set a response header named ```X-Service-Uid``` that lets you identify the container that is serving the content. This is useful when you have many containers running on a single host using different ports or if you are running a cluster and need to identify which host the content is served from. The default value is set to the Service Unit's App Group Name, Local ID and Instance ID.
+The ```SERVICE_UID``` environmental variable is used to set a response header named ```X-Service-Uid``` that lets you identify the container that is serving the content. This is useful when you have many containers running on a single host using different ports or if you are running a cluster and need to identify which host the content is served from. If the value contains the placeholder `{{HOSTNAME}}` it will be replaced with the system `hostname` value; by default this is the container id but the hostname can be modified using the `--hostname` docker create|run parameter.
 
 ```
 ...
-  --env "SERVICE_UID=app-1.1.1" \
+  --env "SERVICE_UID={{HOSTNAME}}" \
 ...
 ```
 
