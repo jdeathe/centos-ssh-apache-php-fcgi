@@ -75,7 +75,7 @@ Environment="APACHE_SERVER_ALIAS=app-1"
 Environment="APACHE_SERVER_HOME=/var/www"
 Environment="APACHE_SERVER_NAME=app-1.local"
 Environment="APACHE_SYSTEM_USER=app"
-Environment="HTTPD=/usr/sbin/httpd"
+Environment="HTTPD=/usr/sbin/httpd.worker"
 Environment="PHP_OPTIONS_DATE_TIMEZONE=UTC"
 Environment="SERVICE_UID=app-1.%i"
 
