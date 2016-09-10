@@ -2,7 +2,7 @@
 # Constants
 # -----------------------------------------------------------------------------
 DOCKER_USER := jdeathe
-DOCKER_IMAGE_NAME := centos-ssh-apache-php
+DOCKER_IMAGE_NAME := centos-ssh-apache-php-fcgi
 
 # Tag validation patterns
 DOCKER_IMAGE_TAG_PATTERN := ^(latest|(centos-[6-7])|(centos-(6-1|7-2).[0-9]+.[0-9]+))$
@@ -60,6 +60,6 @@ APACHE_RUN_USER ?= app-www
 APACHE_SERVER_ALIAS ?= app-1
 APACHE_SERVER_NAME ?= app-1.local
 APACHE_SYSTEM_USER ?= app
-HTTPD ?= /usr/sbin/httpd
+HTTPD ?= /usr/sbin/httpd.worker
 PHP_OPTIONS_DATE_TIMEZONE ?= UTC
 SERVICE_UID ?= app-1.1.1
