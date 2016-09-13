@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.6.1
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.7.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -26,6 +26,6 @@ RUN rpm --rebuilddb \
 # -----------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
 # -----------------------------------------------------------------------------
-ENV HTTPD="/usr/sbin/httpd.worker"
+ENV APACHE_MPM="worker"
 
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
