@@ -24,8 +24,47 @@ RUN rpm --rebuilddb \
 	&& yum clean all
 
 # -----------------------------------------------------------------------------
+# Copy files into place
+# -----------------------------------------------------------------------------
+ADD opt/scmi \
+	/opt/scmi/
+ADD etc/systemd/system \
+	/etc/systemd/system/
+
+# -----------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
 # -----------------------------------------------------------------------------
 ENV APACHE_MPM="worker"
+
+# -----------------------------------------------------------------------------
+# Set image metadata
+# -----------------------------------------------------------------------------
+ARG RELEASE_VERSION="1.7.0"
+LABEL \
+	install="docker run \
+--rm \
+--privileged \
+--volume /:/media/root \
+jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
+/sbin/scmi install \
+--chroot=/media/root \
+--name=\${NAME} \
+--tag=centos-6-${RELEASE_VERSION}" \
+	uninstall="docker run \
+--rm \
+--privileged \
+--volume /:/media/root \
+jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
+/sbin/scmi uninstall \
+--chroot=/media/root \
+--name=\${NAME} \
+--tag=centos-6-${RELEASE_VERSION}" \
+	org.deathe.name="centos-ssh-apache-php-fcgi" \
+	org.deathe.version="${RELEASE_VERSION}" \
+	org.deathe.release="jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION}" \
+	org.deathe.license="MIT" \
+	org.deathe.vendor="jdeathe" \
+	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
+	org.deathe.description="CentOS-6 6.8 x86_64 - Apache 2.2, PHP 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
 
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
