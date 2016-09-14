@@ -7,7 +7,9 @@ Apache PHP web server, loading only a minimal set of Apache modules by default. 
 
 ## Overview & links
 
-The [Dockerfile](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile) can be used to build a base image that can be run as-is or used as the bases for other more specific builds.
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.7.0` for the [1.7.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.7.0) release tag.
+
+- centos-6 [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
@@ -36,7 +38,7 @@ $ docker run -d \
   --name apache-php.pool-1.1.1 \
   -p 8080:80 \
   -e "APACHE_SERVER_NAME=app-1.local" \
-  jdeathe/centos-ssh-apache-php-fcgi:latest
+  jdeathe/centos-ssh-apache-php-fcgi:centos-6
 ```
 
 Now point your browser to `http://{docker-host}:8080` where `{docker-host}` is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
@@ -302,7 +304,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
   --volume apache-php.pool-1.1.1.data-ssl:/etc/services-config/ssl \
-  jdeathe/centos-ssh-apache-php-fcgi:latest
+  jdeathe/centos-ssh-apache-php-fcgi:centos-6
 ```
 
 ##### APACHE_MPM
