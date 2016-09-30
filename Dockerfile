@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.7.1
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.7.2
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -46,7 +46,7 @@ LABEL \
 --privileged \
 --volume /:/media/root \
 jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
-/sbin/scmi install \
+/usr/sbin/scmi install \
 --chroot=/media/root \
 --name=\${NAME} \
 --tag=centos-6-${RELEASE_VERSION}" \
@@ -55,7 +55,7 @@ jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
 --privileged \
 --volume /:/media/root \
 jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
-/sbin/scmi uninstall \
+/usr/sbin/scmi uninstall \
 --chroot=/media/root \
 --name=\${NAME} \
 --tag=centos-6-${RELEASE_VERSION}" \
