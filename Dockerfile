@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.7.2
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.7.3
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -39,7 +39,7 @@ ENV APACHE_MPM="worker"
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.7.1"
+ARG RELEASE_VERSION="1.7.2"
 LABEL \
 	install="docker run \
 --rm \
