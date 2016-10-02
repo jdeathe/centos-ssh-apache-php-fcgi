@@ -39,7 +39,7 @@ ENV APACHE_MPM="worker"
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.7.1"
+ARG RELEASE_VERSION="1.7.2"
 LABEL \
 	install="docker run \
 --rm \
