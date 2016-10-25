@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.7.3
+FROM jdeathe/centos-ssh-apache-php:centos-6-1.8.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -30,6 +30,13 @@ ADD opt/scmi \
 	/opt/scmi/
 ADD etc/systemd/system \
 	/etc/systemd/system/
+
+# -----------------------------------------------------------------------------
+# Package installation
+# -----------------------------------------------------------------------------
+RUN sed -i \
+	-e 's~^description =.*$~description = "This CentOS / Apache / PHP (FastCGI) service is running in a container."~' \
+	${PACKAGE_PATH}/etc/views/index.ini
 
 # -----------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
@@ -67,4 +74,4 @@ jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
 	org.deathe.description="CentOS-6 6.8 x86_64 - Apache 2.2, PHP 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
 
-CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
+CMD ["/usr/sbin/httpd-startup", "/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
