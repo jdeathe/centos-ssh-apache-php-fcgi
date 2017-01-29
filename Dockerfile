@@ -35,7 +35,7 @@ ADD etc/systemd/system \
 # Package installation
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^description =.*$~description = "This CentOS / Apache / PHP (FastCGI) service is running in a container."~' \
+	-e 's~^description =.*$~description = "This CentOS / Apache / PHP-CGI (FastCGI) service is running in a container."~' \
 	${PACKAGE_PATH}/etc/views/index.ini
 
 # -----------------------------------------------------------------------------
