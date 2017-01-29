@@ -6,6 +6,14 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.8 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
 
+### 1.8.1 - 2017-01-29
+
+- Updates image source to release 1.8.2 including required Makefile and environment changes.
+- Adds test cases for FastCGI operation.
+- Adds a Change Log.
+- Adds support for semantic release tag version numbers.
+- Changes description to PHP-CGI instead of PHP.
+
 ### 1.8.0 - 2016-10-25
 
 - Changes source to release 1.8.0.
