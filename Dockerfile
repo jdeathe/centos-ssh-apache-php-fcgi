@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:centos-6-1.8.0
+FROM jdeathe/centos-ssh-apache-php:1.8.2
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -35,7 +35,7 @@ ADD etc/systemd/system \
 # Package installation
 # -----------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^description =.*$~description = "This CentOS / Apache / PHP (FastCGI) service is running in a container."~' \
+	-e 's~^description =.*$~description = "This CentOS / Apache / PHP-CGI (FastCGI) service is running in a container."~' \
 	${PACKAGE_PATH}/etc/views/index.ini
 
 # -----------------------------------------------------------------------------
@@ -46,32 +46,32 @@ ENV APACHE_MPM="worker"
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.8.0"
+ARG RELEASE_VERSION="1.8.1"
 LABEL \
 	install="docker run \
 --rm \
 --privileged \
 --volume /:/media/root \
-jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
+jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 /usr/sbin/scmi install \
 --chroot=/media/root \
 --name=\${NAME} \
---tag=centos-6-${RELEASE_VERSION}" \
+--tag=${RELEASE_VERSION}" \
 	uninstall="docker run \
 --rm \
 --privileged \
 --volume /:/media/root \
-jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION} \
+jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 /usr/sbin/scmi uninstall \
 --chroot=/media/root \
 --name=\${NAME} \
---tag=centos-6-${RELEASE_VERSION}" \
+--tag=${RELEASE_VERSION}" \
 	org.deathe.name="centos-ssh-apache-php-fcgi" \
 	org.deathe.version="${RELEASE_VERSION}" \
-	org.deathe.release="jdeathe/centos-ssh-apache-php-fcgi:centos-6-${RELEASE_VERSION}" \
+	org.deathe.release="jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION}" \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
-	org.deathe.description="CentOS-6 6.8 x86_64 - Apache 2.2, PHP 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
+	org.deathe.description="CentOS-6 6.8 x86_64 - Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
 
 CMD ["/usr/sbin/httpd-startup", "/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
