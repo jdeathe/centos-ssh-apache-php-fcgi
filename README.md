@@ -7,9 +7,9 @@ Apache PHP web server, loading only a minimal set of Apache modules by default. 
 
 ## Overview & links
 
-The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.7.0` for the [1.7.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.7.0) release tag.
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.8.0` or `1.8.0` for the [1.8.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.7.0) release tag.
 
-- centos-6 [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- centos-6, `centos-6-1.8.0`, `1.8.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
@@ -85,10 +85,10 @@ $ docker run \
   --rm \
   --privileged \
   --volume /:/media/root \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=centos-6-1.7.1 \
+    --tag=1.8.0 \
     --name=apache-php.pool-1.1.1
 ```
 
@@ -101,10 +101,10 @@ $ docker run \
   --rm \
   --privileged \
   --volume /:/media/root \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0 \
   /usr/sbin/scmi uninstall \
     --chroot=/media/root \
-    --tag=centos-6-1.7.1 \
+    --tag=1.8.0 \
     --name=apache-php.pool-1.1.1
 ```
 
@@ -117,10 +117,10 @@ $ docker run \
   --rm \
   --privileged \
   --volume /:/media/root \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=centos-6-1.7.1 \
+    --tag=1.8.0 \
     --name=apache-php.pool-1.1.1 \
     --manager=systemd \
     --register \
@@ -142,7 +142,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1
+    jdeathe/centos-ssh-apache-php-fcgi:1.8.0
   ) --info"
 ```
 
@@ -152,7 +152,7 @@ To perform an installation using the docker name `apache-php.pool-1.2.1` simply 
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1
+    jdeathe/centos-ssh-apache-php-fcgi:1.8.0
   ) --name=apache-php.pool-1.2.1"
 ```
 
@@ -162,7 +162,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.uninstall}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1
+    jdeathe/centos-ssh-apache-php-fcgi:1.8.0
   ) --name=apache-php.pool-1.2.1"
 ```
 
@@ -175,7 +175,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 ```
 $ sudo -E atomic install \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0 \
   --info
 ```
 
@@ -184,14 +184,14 @@ To perform an installation using the docker name `apache-php.pool-1.3.1` simply 
 ```
 $ sudo -E atomic install \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0
 ```
 
 Alternatively, you could use the `scmi` options `--name` or `-n` for naming the container.
 
 ```
 $ sudo -E atomic install \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0 \
   --name apache-php.pool-1.3.1
 ```
 
@@ -200,7 +200,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 ```
 $ sudo -E atomic uninstall \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6-1.7.1
+  jdeathe/centos-ssh-apache-php-fcgi:1.8.0
 ```
 
 #### Environment Variables
