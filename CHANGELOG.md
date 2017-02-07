@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.8 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
 
-### 1.9.0 - Unreleased
+### 1.9.0 - 2017-02-07
 
 - Updates image source to release 1.9.0.
 - Fixes issue with app specific `httpd` configuration requiring the `etc/php.d` directory to exist.
