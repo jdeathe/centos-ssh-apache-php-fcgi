@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:1.8.2
+FROM jdeathe/centos-ssh-apache-php:1.9.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -46,12 +46,14 @@ ENV APACHE_MPM="worker"
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.8.1"
+ARG RELEASE_VERSION="1.9.0"
 LABEL \
 	install="docker run \
 --rm \
 --privileged \
 --volume /:/media/root \
+--env BASH_ENV="" \
+--env ENV="" \
 jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 /usr/sbin/scmi install \
 --chroot=/media/root \
@@ -61,6 +63,8 @@ jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 --rm \
 --privileged \
 --volume /:/media/root \
+--env BASH_ENV="" \
+--env ENV="" \
 jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 /usr/sbin/scmi uninstall \
 --chroot=/media/root \
