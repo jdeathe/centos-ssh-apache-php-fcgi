@@ -105,7 +105,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			it "Responds with a Server header of 'Apache' only."
 				header_server="$(
 					curl -sI \
-						--header 'Host: app-1.local' \
+						--header "Host: ${container_hostname}" \
 						http://127.0.0.1:${container_port_80} \
 					| grep '^Server: ' \
 					| cut -c 9- \
@@ -120,7 +120,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			it "Responds with a X-Service-UID header of the container hostname."
 				header_x_service_uid="$(
 					curl -sI \
-						--header 'Host: app-1.local' \
+						--header "Host: app-1.local" \
 						http://127.0.0.1:${container_port_80} \
 					| grep '^X-Service-UID: ' \
 					| cut -c 16- \
@@ -194,7 +194,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 						"app-www"
 				end
 
-				it "Includes the server name default (app-1.local)."
+				it "Includes the server name default (container name)."
 					local apache_server_name=""
 
 					apache_server_name="$(
@@ -207,7 +207,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 					assert equal \
 						"${apache_server_name}" \
-						"app-1.local"
+						"${container_hostname}"
 				end
 
 				it "Includes the server alias default (EMPTY)."
@@ -311,7 +311,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 				curl_get_request="$(
 					curl -s \
-						--header 'Host: app-1.local' \
+						--header "Host: ${container_hostname}" \
 						http://127.0.0.1:${container_port_80}
 				)"
 
@@ -353,7 +353,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 				curl_get_request="$(
 					curl -s \
-						--header 'Host: app-1.local' \
+						--header "Host: ${container_hostname}" \
 						http://127.0.0.1:${container_port_80}
 				)"
 
@@ -376,7 +376,8 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				docker exec \
 					apache-php.pool-1.1.1 \
 					curl -s \
-						http://app-1.local/server-status\?auto \
+						--header "Host: ${container_hostname}" \
+						http://127.0.0.1/server-status\?auto \
 				| grep -qE \
 					'^Scoreboard: [\._SRWKDCLGI]+$' \
 				&> /dev/null
@@ -393,15 +394,17 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 					docker exec \
 						apache-php.pool-1.1.1 \
 						curl -s \
-							http://app-1.local/server-status\?auto \
+							--header "Host: ${container_hostname}" \
+							http://127.0.0.1/server-status\?auto \
 					| grep -qE \
 						'^Total Accesses: [0-9]+' \
 					&> /dev/null
 
 					status_apache_server_status_pattern=${?}
 
-					# TODO - ISSUE 291: ExtendedStatus should be off by default.
-					# assert equal "${status_apache_server_status_pattern}" 1
+					assert equal \
+						"${status_apache_server_status_pattern}" \
+						1
 				end
 
 				it "Prevents remote access to server-status."
@@ -409,7 +412,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 					local curl_get_request=""
 
 					curl -s \
-						--header 'Host: app-1.local' \
+						--header "Host: ${container_hostname}" \
 						http://127.0.0.1:${container_port_80}/server-status\?auto \
 					| grep -qE \
 						'^Scoreboard: [\._SRWKDCLGI]+$' \
@@ -428,7 +431,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 							curl -s \
 								-o /dev/null \
 								-w "%{http_code}" \
-								--header 'Host: app-1.local' \
+								--header "Host: ${container_hostname}" \
 								http://127.0.0.1:${container_port_80}/server-status\?auto
 						)"
 
@@ -500,9 +503,14 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			end
 		end
 
+		unset container_hostname
+		unset header_server
+		unset header_x_service_uid
+
 		docker_terminate_container \
 			apache-php.pool-1.1.1 \
 		&> /dev/null
+
 		trap - \
 			INT TERM EXIT
 	end
@@ -523,6 +531,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_CUSTOM_LOG_FORMAT="common" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -530,7 +539,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			curl_get_request="$(
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -561,6 +570,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_CUSTOM_LOG_LOCATION="var/log/access.log" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -568,7 +578,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			curl_get_request="$(
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -598,6 +608,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_CUSTOM_LOG_LOCATION="/var/log/httpd/access.log" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -605,7 +616,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			curl_get_request="$(
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -635,6 +646,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_ERROR_LOG_LOCATION="var/log/error.log" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -642,7 +654,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			curl_get_request="$(
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -671,6 +683,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_ERROR_LOG_LOCATION="/var/log/httpd/error.log" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -678,7 +691,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			curl_get_request="$(
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -707,6 +720,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_ERROR_LOG_LEVEL="debug" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -714,7 +728,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			curl_get_request="$(
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -744,6 +758,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
 				--env APACHE_EXTENDED_STATUS_ENABLED="true" \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
 
@@ -752,7 +767,8 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			docker exec \
 				apache-php.pool-1.1.1 \
 				curl -s \
-					http://app-1.local/server-status\?auto \
+				--header "Host: app-1.local" \
+					http://127.0.0.1/server-status\?auto \
 			| grep -qE \
 				'^Total Accesses: [0-9]+' \
 			&> /dev/null
@@ -768,7 +784,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				local curl_get_request=""
 
 				curl -s \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}/server-status\?auto \
 				| grep -qE \
 					'^Total Accesses: [0-9]+' \
@@ -787,7 +803,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 						curl -s \
 							-o /dev/null \
 							-w "%{http_code}" \
-							--header 'Host: app-1.local' \
+							--header "Host: app-1.local" \
 							http://127.0.0.1:${container_port_80}/server-status\?auto
 					)"
 
@@ -816,7 +832,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			header_x_service_uid="$(
 				curl -sI \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80} \
 				| grep '^X-Service-UID: ' \
 				| cut -c 16- \
@@ -846,7 +862,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 				header_x_service_uid="$(
 					curl -sI \
-						--header 'Host: app-1.local' \
+						--header "Host: app-1.local" \
 						http://127.0.0.1:${container_port_80} \
 					| grep '^X-Service-UID: ' \
 					| cut -c 16- \
@@ -931,7 +947,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 
 			header_x_service_operating_mode="$(
 				curl -sI \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80} \
 				| grep '^X-Service-Operating-Mode: ' \
 				| cut -c 27- \
@@ -1047,14 +1063,9 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			docker exec -i \
 				apache-php.pool-1.1.1 \
 				tee \
-					/etc/services-config/httpd/conf.d/05-vhost.conf \
+					/etc/services-config/httpd/conf.d/05-virtual-host.conf \
 					1> /dev/null \
 					<<-CONFIG
-			<IfVersion < 2.4>
-			    NameVirtualHost *:80
-			    NameVirtualHost *:8443
-			</IfVersion>
-
 			<VirtualHost *:80 *:8443>
 			    ServerName localhost.localdomain
 			    DocumentRoot /var/www/html
@@ -1071,12 +1082,6 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			    </Directory>
 			</VirtualHost>
 			CONFIG
-
-			docker exec \
-				apache-php.pool-1.1.1 \
-				sed -i \
-					-e 's~^NameVirtualHost \(.*\)$~#NameVirtualHost \1~g' \
-					/etc/services-config/httpd/conf.d/10-vhost.conf
 
 			sleep ${BOOTSTRAP_BACKOFF_TIME}
 
@@ -1095,7 +1100,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				curl -s \
 					-o /dev/null \
 					-w "%{http_code}" \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					http://127.0.0.1:${container_port_80}
 			)"
 
@@ -1118,6 +1123,204 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 					"${curl_response_code_server_alias}" \
 					"200"
 			end
+		end
+
+		it "Allows ServerName to be populated with the container's hostname (e.g php-hello-world)."
+			local curl_response_code_default=""
+			local curl_response_code_server_named=""
+
+			docker_terminate_container \
+				apache-php.pool-1.1.1 \
+			&> /dev/null
+
+			docker run -d \
+				--name apache-php.pool-1.1.1 \
+				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
+				--hostname php-hello-world \
+				jdeathe/centos-ssh-apache-php:latest \
+			&> /dev/null
+
+			# Add a default VirtualHost that rejects access (403 response).
+			docker exec -i \
+				apache-php.pool-1.1.1 \
+				tee \
+					/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+					1> /dev/null \
+					<<-CONFIG
+			<VirtualHost *:80 *:8443>
+			    ServerName localhost.localdomain
+			    DocumentRoot /var/www/html
+
+			    <Directory /var/www/html>
+			        ErrorDocument 403 "403 Forbidden"
+			        <IfVersion < 2.4>
+			            Order deny,allow
+			            Deny from all
+			        </IfVersion>
+			        <IfVersion >= 2.4>
+			            Require all denied
+			        </IfVersion>
+			    </Directory>
+			</VirtualHost>
+			CONFIG
+
+			sleep ${BOOTSTRAP_BACKOFF_TIME}
+
+			docker exec \
+				apache-php.pool-1.1.1 \
+				bash -c 'apachectl graceful'
+
+			curl_response_code_default="$(
+				curl -s \
+					-o /dev/null \
+					-w "%{http_code}" \
+					http://127.0.0.1:${container_port_80}
+			)"
+
+			curl_response_code_server_named="$(
+				curl -s \
+					-o /dev/null \
+					-w "%{http_code}" \
+					--header 'Host: php-hello-world' \
+					http://127.0.0.1:${container_port_80}
+			)"
+
+			assert equal \
+				"${curl_response_code_default}:${curl_response_code_server_named}" \
+				"403:200"
+		end
+
+		it "Allows ServerName to be populated with the container's hostname via a placeholder (e.g {{HOSTNAME}}.localdomain)."
+			local curl_response_code_default=""
+			local curl_response_code_server_named=""
+
+			docker_terminate_container \
+				apache-php.pool-1.1.1 \
+			&> /dev/null
+
+			docker run -d \
+				--name apache-php.pool-1.1.1 \
+				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
+				--hostname php-hello-world \
+				--env APACHE_SERVER_NAME="{{HOSTNAME}}.localdomain" \
+				jdeathe/centos-ssh-apache-php:latest \
+			&> /dev/null
+
+			# Add a default VirtualHost that rejects access (403 response).
+			docker exec -i \
+				apache-php.pool-1.1.1 \
+				tee \
+					/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+					1> /dev/null \
+					<<-CONFIG
+			<VirtualHost *:80 *:8443>
+			    ServerName localhost.localdomain
+			    DocumentRoot /var/www/html
+
+			    <Directory /var/www/html>
+			        ErrorDocument 403 "403 Forbidden"
+			        <IfVersion < 2.4>
+			            Order deny,allow
+			            Deny from all
+			        </IfVersion>
+			        <IfVersion >= 2.4>
+			            Require all denied
+			        </IfVersion>
+			    </Directory>
+			</VirtualHost>
+			CONFIG
+
+			sleep ${BOOTSTRAP_BACKOFF_TIME}
+
+			docker exec \
+				apache-php.pool-1.1.1 \
+				bash -c 'apachectl graceful'
+
+			curl_response_code_default="$(
+				curl -s \
+					-o /dev/null \
+					-w "%{http_code}" \
+					http://127.0.0.1:${container_port_80}
+			)"
+
+			curl_response_code_server_named="$(
+				curl -s \
+					-o /dev/null \
+					-w "%{http_code}" \
+					--header 'Host: php-hello-world.localdomain' \
+					http://127.0.0.1:${container_port_80}
+			)"
+
+			assert equal \
+				"${curl_response_code_default}:${curl_response_code_server_named}" \
+				"403:200"
+		end
+
+		it "Allows ServerAlias to be populated with the container's hostname via a placeholder (e.g {{HOSTNAME}}.localdomain)."
+			local curl_response_code_default=""
+			local curl_response_code_server_named=""
+
+			docker_terminate_container \
+				apache-php.pool-1.1.1 \
+			&> /dev/null
+
+			docker run -d \
+				--name apache-php.pool-1.1.1 \
+				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
+				--hostname php-hello-world \
+				--env APACHE_SERVER_ALIAS="{{HOSTNAME}}.localdomain" \
+				--env APACHE_SERVER_NAME="app-1.local" \
+				jdeathe/centos-ssh-apache-php:latest \
+			&> /dev/null
+
+			# Add a default VirtualHost that rejects access (403 response).
+			docker exec -i \
+				apache-php.pool-1.1.1 \
+				tee \
+					/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+					1> /dev/null \
+					<<-CONFIG
+			<VirtualHost *:80 *:8443>
+			    ServerName localhost.localdomain
+			    DocumentRoot /var/www/html
+
+			    <Directory /var/www/html>
+			        ErrorDocument 403 "403 Forbidden"
+			        <IfVersion < 2.4>
+			            Order deny,allow
+			            Deny from all
+			        </IfVersion>
+			        <IfVersion >= 2.4>
+			            Require all denied
+			        </IfVersion>
+			    </Directory>
+			</VirtualHost>
+			CONFIG
+
+			sleep ${BOOTSTRAP_BACKOFF_TIME}
+
+			docker exec \
+				apache-php.pool-1.1.1 \
+				bash -c 'apachectl graceful'
+
+			curl_response_code_default="$(
+				curl -s \
+					-o /dev/null \
+					-w "%{http_code}" \
+					http://127.0.0.1:${container_port_80}
+			)"
+
+			curl_response_code_server_named="$(
+				curl -s \
+					-o /dev/null \
+					-w "%{http_code}" \
+					--header 'Host: php-hello-world.localdomain' \
+					http://127.0.0.1:${container_port_80}
+			)"
+
+			assert equal \
+				"${curl_response_code_default}:${curl_response_code_server_named}" \
+				"403:200"
 		end
 
 		it "Allows configuration of the public directory (e.g web)."
@@ -1148,7 +1351,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			sleep ${BOOTSTRAP_BACKOFF_TIME}
 
 			curl -sI \
-				--header 'Host: app-1.local' \
+				--header "Host: app-1.local" \
 				http://127.0.0.1:${container_port_80} \
 			| grep -q '^X-Service-UID: app-1.local' \
 			&> /dev/null
@@ -1169,6 +1372,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			docker run -d \
 				--name apache-php.pool-1.1.1 \
 				--publish ${DOCKER_PORT_MAP_TCP_80}:80 \
+				--env APACHE_SERVER_NAME="app-1.local" \
 				--env PACKAGE_PATH="/opt/php-hw" \
 				jdeathe/centos-ssh-apache-php-fcgi:latest \
 			&> /dev/null
@@ -1210,7 +1414,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				tee \
 					/opt/php-hw/etc/httpd/conf.d/50-fcgid.conf \
 					1> /dev/null \
-					<<-EOT
+					<<-CONFIG
 			<IfModule mod_fcgid.c>
 			    AddHandler fcgid-script php
 			    AddType text/html php
@@ -1232,7 +1436,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			        </Files>
 			    </IfModule>
 			</Directory>
-			EOT
+			CONFIG
 
 			docker exec -i \
 				apache-php.pool-1.1.1 \
@@ -1274,7 +1478,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 			sleep ${BOOTSTRAP_BACKOFF_TIME}
 
 			curl -s \
-				--header 'Host: app-1.local' \
+				--header "Host: app-1.local" \
 				http://127.0.0.1:${container_port_80} \
 			| grep -q '^Hello, world!' \
 			&> /dev/null
@@ -1315,7 +1519,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 				curl -ks \
 					-o /dev/null \
 					-w "%{http_code}" \
-					--header 'Host: app-1.local' \
+					--header "Host: app-1.local" \
 					https://127.0.0.1:${container_port_443}
 			)"
 
