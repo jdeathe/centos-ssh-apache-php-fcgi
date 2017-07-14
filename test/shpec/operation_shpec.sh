@@ -1996,7 +1996,7 @@ function test_healthcheck ()
 					awk \
 						-v interval_seconds="${interval_seconds}" \
 						-v retries="${retries}" \
-						'BEGIN { print 1 + interval_seconds * retries; }'
+						'BEGIN { print 2 + interval_seconds * retries; }'
 				)
 
 				health_status="$(
