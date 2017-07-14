@@ -6,8 +6,6 @@
 # =============================================================================
 FROM jdeathe/centos-ssh-apache-php:1.10.0
 
-MAINTAINER James Deathe <james.deathe@gmail.com>
-
 # -----------------------------------------------------------------------------
 # FastCGI support
 # -----------------------------------------------------------------------------
@@ -50,6 +48,7 @@ ENV APACHE_MPM="worker"
 # -----------------------------------------------------------------------------
 ARG RELEASE_VERSION="1.9.0"
 LABEL \
+	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
 --rm \
 --privileged \
