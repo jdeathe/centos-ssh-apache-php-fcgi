@@ -7,6 +7,7 @@ Summary of release changes for Version 1.
 CentOS-6 6.9 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
 
 ### 1.10.0 - Unreleased
+
 - Updates image source to release 1.10.0.
 
 ### 1.9.0 - 2017-02-07
