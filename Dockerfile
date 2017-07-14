@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:1.9.0
+FROM jdeathe/centos-ssh-apache-php:1.10.0
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -13,8 +13,10 @@ MAINTAINER James Deathe <james.deathe@gmail.com>
 # -----------------------------------------------------------------------------
 RUN rpm --rebuilddb \
 	&& yum -y erase \
-		php-5.3.3-48.el6_8 \
-	&& yum --setopt=tsflags=nodocs -y install \
+		php-5.3.3-49.el6 \
+	&& yum -y install \
+		--setopt=tsflags=nodocs \
+		--disableplugin=fastestmirror \
 		fcgi-2.4.0-12.el6 \
 		mod_fcgid-2.3.9-1.el6 \
 	&& yum versionlock add \
@@ -76,6 +78,6 @@ jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
-	org.deathe.description="CentOS-6 6.8 x86_64 - Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
+	org.deathe.description="CentOS-6 6.9 x86_64 - Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
 
 CMD ["/usr/sbin/httpd-startup", "/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
