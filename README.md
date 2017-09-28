@@ -217,6 +217,12 @@ $ sudo -E atomic uninstall \
 
 #### Environment Variables
 
+There are environmental variables available which allows the operator to customise the running container.
+
+##### APACHE_AUTOSTART_HTTPD_BOOTSTRAP & APACHE_AUTOSTART_HTTPD_WRAPPER
+
+It may be desirable to prevent the startup of the httpd-bootstrap and/or httpd-wrapper scripts. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable services from startup by setting `APACHE_AUTOSTART_HTTPD_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `ab`, `curl`, `elinks`, `php-cli` etc.
+
 ##### APACHE_SERVER_NAME & APACHE_SERVER_ALIAS
 
 The `APACHE_SERVER_NAME` and `APACHE_SERVER_ALIAS` environmental variables are used to set the VirtualHost `ServerName` and `ServerAlias` values respectively. If the value contains the placeholder `{{HOSTNAME}}` it will be replaced with the system `hostname` value; by default this is the container id but the hostname can be modified using the `--hostname` docker create|run parameter.
@@ -423,5 +429,16 @@ To set the timezone for the UK and account for British Summer Time you would use
 ```
 ...
   --env "PHP_OPTIONS_DATE_TIMEZONE=Europe/London" \
+...
+```
+
+##### PHP_OPTIONS_SESSION_SAVE_HANDLER & PHP_OPTIONS_SESSION_SAVE_PATH
+
+Using `PHP_OPTIONS_SESSION_SAVE_HANDLER` and `PHP_OPTIONS_SESSION_SAVE_PATH` together it's possible to configure PHP to use an alternative `session.save_handler` and `session.save_path`. For example if you have a Memcached server running on the host `memcached-server` on the default port `11211` the following configuration will allow session data to be stored in Memcached, allowing session data to be shared between multiple PHP containers.
+
+```
+...
+  --env "PHP_OPTIONS_SESSION_SAVE_HANDLER=memcached" \
+  --env "PHP_OPTIONS_SESSION_SAVE_PATH=memcached-server:11211" \
 ...
 ```
