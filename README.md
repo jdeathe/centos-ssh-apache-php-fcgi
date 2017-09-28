@@ -7,9 +7,9 @@ Apache PHP web server, loading only a minimal set of Apache modules by default. 
 
 ## Overview & links
 
-The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.10.0` or `1.10.0` for the [1.10.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.7.0) release tag.
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.10.1` or `1.10.1` for the [1.10.1](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.7.0) release tag.
 
-- `centos-6`, `centos-6-1.10.0`, `1.10.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- `centos-6`, `centos-6-1.10.1`, `1.10.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
@@ -87,10 +87,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=1.10.0 \
+    --tag=1.10.1 \
     --name=apache-php.pool-1.1.1
 ```
 
@@ -105,10 +105,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1 \
   /usr/sbin/scmi uninstall \
     --chroot=/media/root \
-    --tag=1.10.0 \
+    --tag=1.10.1 \
     --name=apache-php.pool-1.1.1
 ```
 
@@ -123,10 +123,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=1.10.0 \
+    --tag=1.10.1 \
     --name=apache-php.pool-1.1.1 \
     --manager=systemd \
     --register \
@@ -148,7 +148,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.10.0
+    jdeathe/centos-ssh-apache-php-fcgi:1.10.1
   ) --info"
 ```
 
@@ -158,7 +158,7 @@ To perform an installation using the docker name `apache-php.pool-1.2.1` simply 
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.10.0
+    jdeathe/centos-ssh-apache-php-fcgi:1.10.1
   ) --name=apache-php.pool-1.2.1"
 ```
 
@@ -168,7 +168,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.uninstall}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.10.0
+    jdeathe/centos-ssh-apache-php-fcgi:1.10.1
   ) --name=apache-php.pool-1.2.1"
 ```
 
@@ -179,7 +179,7 @@ With the addition of install/uninstall image labels it is possible to use [Proje
 _NOTE:_ A prerequisite of the following examples is that the image has been pulled (or loaded from the release package).
 
 ```
-$ docker pull jdeathe/centos-ssh-apache-php-fcgi:1.10.0
+$ docker pull jdeathe/centos-ssh-apache-php-fcgi:1.10.1
 ```
 
 To see detailed information about the image run `scmi` with the `--info` option. To see all available `scmi` options run with the `--help` option.
@@ -187,7 +187,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 ```
 $ sudo -E atomic install \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1 \
   --info
 ```
 
@@ -196,14 +196,14 @@ To perform an installation using the docker name `apache-php.pool-1.3.1` simply 
 ```
 $ sudo -E atomic install \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1
 ```
 
 Alternatively, you could use the `scmi` options `--name` or `-n` for naming the container.
 
 ```
 $ sudo -E atomic install \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1 \
   --name apache-php.pool-1.3.1
 ```
 
@@ -212,10 +212,16 @@ To uninstall use the *same command* that was used to install but with the `unins
 ```
 $ sudo -E atomic uninstall \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.0
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.1
 ```
 
 #### Environment Variables
+
+There are environmental variables available which allows the operator to customise the running container.
+
+##### APACHE_AUTOSTART_HTTPD_BOOTSTRAP & APACHE_AUTOSTART_HTTPD_WRAPPER
+
+It may be desirable to prevent the startup of the httpd-bootstrap and/or httpd-wrapper scripts. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable services from startup by setting `APACHE_AUTOSTART_HTTPD_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `ab`, `curl`, `elinks`, `php-cli` etc.
 
 ##### APACHE_SERVER_NAME & APACHE_SERVER_ALIAS
 
@@ -423,5 +429,16 @@ To set the timezone for the UK and account for British Summer Time you would use
 ```
 ...
   --env "PHP_OPTIONS_DATE_TIMEZONE=Europe/London" \
+...
+```
+
+##### PHP_OPTIONS_SESSION_SAVE_HANDLER & PHP_OPTIONS_SESSION_SAVE_PATH
+
+Using `PHP_OPTIONS_SESSION_SAVE_HANDLER` and `PHP_OPTIONS_SESSION_SAVE_PATH` together it's possible to configure PHP to use an alternative `session.save_handler` and `session.save_path`. For example if you have a Memcached server running on the host `memcached-server` on the default port `11211` the following configuration will allow session data to be stored in Memcached, allowing session data to be shared between multiple PHP containers.
+
+```
+...
+  --env "PHP_OPTIONS_SESSION_SAVE_HANDLER=memcached" \
+  --env "PHP_OPTIONS_SESSION_SAVE_PATH=memcached-server:11211" \
 ...
 ```
