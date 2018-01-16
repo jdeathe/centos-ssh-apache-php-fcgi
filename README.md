@@ -136,6 +136,8 @@ $ docker run \
 
 ##### SCMI Fleet Support
 
+**_Deprecation Notice:_** The fleet project is no longer maintained. The fleet `--manager` option has been deprecated in `scmi`.
+
 If your docker host has systemd, fleetd (and optionally etcd) installed then `scmi` provides a method to schedule the container  to run on the cluster. This provides some additional features for managing a group of instances on a [fleet](https://github.com/coreos/fleet) cluster and has the option to use an etcd backed service registry. To use the fleet method of installation use the `-m` or `--manager` option of `scmi` and to include the optional etcd register companion unit use the `--register` option.
 
 ##### SCMI Image Information
@@ -436,8 +438,11 @@ To set the timezone for the UK and account for British Summer Time you would use
 
 Using `PHP_OPTIONS_SESSION_SAVE_HANDLER` and `PHP_OPTIONS_SESSION_SAVE_PATH` together it's possible to configure PHP to use an alternative `session.save_handler` and `session.save_path`. For example if you have a Memcached server running on the host `memcached-server` on the default port `11211` the following configuration will allow session data to be stored in Memcached, allowing session data to be shared between multiple PHP containers.
 
+Using `PHP_OPTIONS_SESSION_NAME` a session name can be defined - otherwise the default name "PHPSESSID" is used.
+
 ```
 ...
+  --env "PHP_OPTIONS_SESSION_NAME=app-session" \
   --env "PHP_OPTIONS_SESSION_SAVE_HANDLER=memcached" \
   --env "PHP_OPTIONS_SESSION_SAVE_PATH=memcached-server:11211" \
 ...
