@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.9 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
 
-### 1.10.4 - Unreleased
+### 1.10.4 - 2018-01-29
 
 - Updates image source to [release 1.10.4](https://github.com/jdeathe/centos-ssh-apache-php/releases/tag/1.10.4).
 
