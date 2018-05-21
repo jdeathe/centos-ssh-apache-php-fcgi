@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:1.10.4
+FROM jdeathe/centos-ssh-apache-php:1.10.5
 
 # -----------------------------------------------------------------------------
 # FastCGI support
@@ -46,7 +46,7 @@ ENV APACHE_MPM="worker"
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.10.4"
+ARG RELEASE_VERSION="1.10.5"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
