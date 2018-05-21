@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:1.10.4
+FROM jdeathe/centos-ssh-apache-php:1.10.5
 
 # -----------------------------------------------------------------------------
 # FastCGI support

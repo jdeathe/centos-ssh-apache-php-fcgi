@@ -65,7 +65,7 @@ Environment="APACHE_ERROR_LOG_LOCATION=var/log/apache_error_log"
 Environment="APACHE_ERROR_LOG_LEVEL=warn"
 Environment="APACHE_EXTENDED_STATUS_ENABLED=false"
 Environment="APACHE_HEADER_X_SERVICE_UID={{HOSTNAME}}"
-Environment="APACHE_LOAD_MODULES=authz_user_module log_config_module expires_module deflate_module headers_module setenvif_module mime_module status_module dir_module alias_module version_module"
+Environment="APACHE_LOAD_MODULES="
 Environment="APACHE_MOD_SSL_ENABLED=false"
 Environment="APACHE_MPM=worker"
 Environment="APACHE_OPERATING_MODE=production"
@@ -81,7 +81,7 @@ Environment="APACHE_SYSTEM_USER=app"
 Environment="PHP_OPTIONS_DATE_TIMEZONE=UTC"
 Environment="PHP_OPTIONS_SESSION_NAME=PHPSESSID"
 Environment="PHP_OPTIONS_SESSION_SAVE_HANDLER=files"
-Environment="PHP_OPTIONS_SESSION_SAVE_PATH=/var/lib/php/session"
+Environment="PHP_OPTIONS_SESSION_SAVE_PATH=var/session"
 
 # Initialisation: Load image from local storage if available, otherwise pull.
 ExecStartPre=/bin/bash -c \
