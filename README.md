@@ -7,7 +7,7 @@ Apache PHP web server, loading only a minimal set of Apache modules by default. 
 
 ## Overview & links
 
-The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.10.5` or `1.10.5` for the [1.10.5](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.7.0) release tag.
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.10.5` or `1.10.5` for the [1.10.5](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.10.5) release tag.
 
 - `centos-6`, `centos-6-1.10.5`, `1.10.5` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
@@ -60,7 +60,7 @@ To verify the container is initialised and running successfully by inspecting th
 $ docker logs apache-php.pool-1.1.1
 ```
 
-On first run, the bootstrap script, ([/usr/sbin/httpd-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/src/usr/sbin/httpd-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will populate it with the example app scripts and VirtualHost configuration files.
+On first run, the bootstrap script, ([/usr/sbin/httpd-bootstrap](https://github.com/jdeathe/centos-ssh-apache-php/blob/centos-6/src/usr/sbin/httpd-bootstrap)), will check if the DocumentRoot directory is empty and, if so, will populate it with the example app scripts and VirtualHost configuration files.
 
 The `apachectl` command can be accessed as follows.
 
