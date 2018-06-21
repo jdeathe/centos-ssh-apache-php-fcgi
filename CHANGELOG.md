@@ -9,6 +9,7 @@ CentOS-6 6.9 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP A
 ### 1.10.6 - Unreleased
 
 - Fixes broken links in the README document.
+- Updates image source to [release 1.10.6](https://github.com/jdeathe/centos-ssh-apache-php/releases/tag/1.10.6).
 
 ### 1.10.5 - 2018-05-21
 

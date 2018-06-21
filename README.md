@@ -38,7 +38,7 @@ $ docker run -d \
   --name apache-php.pool-1.1.1 \
   -p 8080:80 \
   -e "APACHE_SERVER_NAME=app-1.local" \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.5
 ```
 
 Now point your browser to `http://{docker-host}:8080` where `{docker-host}` is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
@@ -343,7 +343,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
   --volume apache-php.pool-1.1.1.data-ssl:/etc/services-config/ssl \
-  jdeathe/centos-ssh-apache-php-fcgi:centos-6
+  jdeathe/centos-ssh-apache-php-fcgi:1.10.5
 ```
 
 ##### APACHE_MPM
