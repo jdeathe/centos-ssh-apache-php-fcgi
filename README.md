@@ -7,9 +7,9 @@ Apache PHP web server, loading only a minimal set of Apache modules by default. 
 
 ## Overview & links
 
-The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.10.6` or `1.10.6` for the [1.10.6](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.10.6) release tag.
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.11.0` or `1.11.0` for the [1.11.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.11.0) release tag.
 
-- `centos-6`, `centos-6-1.10.6`, `1.10.6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- `centos-6`, `centos-6-1.11.0`, `1.11.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
@@ -38,7 +38,7 @@ $ docker run -d \
   --name apache-php.pool-1.1.1 \
   -p 8080:80 \
   -e "APACHE_SERVER_NAME=app-1.local" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0
 ```
 
 Now point your browser to `http://{docker-host}:8080` where `{docker-host}` is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
@@ -87,10 +87,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=1.10.6 \
+    --tag=1.11.0 \
     --name=apache-php.pool-1.1.1
 ```
 
@@ -105,10 +105,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0 \
   /usr/sbin/scmi uninstall \
     --chroot=/media/root \
-    --tag=1.10.6 \
+    --tag=1.11.0 \
     --name=apache-php.pool-1.1.1
 ```
 
@@ -123,10 +123,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=1.10.6 \
+    --tag=1.11.0 \
     --name=apache-php.pool-1.1.1 \
     --manager=systemd \
     --register \
@@ -150,7 +150,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+    jdeathe/centos-ssh-apache-php-fcgi:1.11.0
   ) --info"
 ```
 
@@ -160,7 +160,7 @@ To perform an installation using the docker name `apache-php.pool-1.2.1` simply 
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+    jdeathe/centos-ssh-apache-php-fcgi:1.11.0
   ) --name=apache-php.pool-1.2.1"
 ```
 
@@ -170,7 +170,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.uninstall}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+    jdeathe/centos-ssh-apache-php-fcgi:1.11.0
   ) --name=apache-php.pool-1.2.1"
 ```
 
@@ -181,7 +181,7 @@ With the addition of install/uninstall image labels it is possible to use [Proje
 _NOTE:_ A prerequisite of the following examples is that the image has been pulled (or loaded from the release package).
 
 ```
-$ docker pull jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+$ docker pull jdeathe/centos-ssh-apache-php-fcgi:1.11.0
 ```
 
 To see detailed information about the image run `scmi` with the `--info` option. To see all available `scmi` options run with the `--help` option.
@@ -189,7 +189,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 ```
 $ sudo -E atomic install \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0 \
   --info
 ```
 
@@ -198,14 +198,14 @@ To perform an installation using the docker name `apache-php.pool-1.3.1` simply 
 ```
 $ sudo -E atomic install \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0
 ```
 
 Alternatively, you could use the `scmi` options `--name` or `-n` for naming the container.
 
 ```
 $ sudo -E atomic install \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0 \
   --name apache-php.pool-1.3.1
 ```
 
@@ -214,7 +214,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 ```
 $ sudo -E atomic uninstall \
   -n apache-php.pool-1.3.1 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0
 ```
 
 #### Environment Variables
@@ -343,7 +343,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
   --volume apache-php.pool-1.1.1.data-ssl:/etc/services-config/ssl \
-  jdeathe/centos-ssh-apache-php-fcgi:1.10.6
+  jdeathe/centos-ssh-apache-php-fcgi:1.11.0
 ```
 
 ##### APACHE_MPM
