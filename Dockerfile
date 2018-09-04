@@ -4,7 +4,7 @@
 # CentOS-6, Apache 2.2, PHP 5.3, PHP Memcached 1.0, PHP APC 3.1.
 # 
 # =============================================================================
-FROM jdeathe/centos-ssh-apache-php:1.10.6
+FROM jdeathe/centos-ssh-apache-php:1.11.0
 
 # -----------------------------------------------------------------------------
 # FastCGI support
@@ -77,6 +77,6 @@ jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
-	org.deathe.description="CentOS-6 6.9 x86_64 - Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
+	org.deathe.description="CentOS-6 6.10 x86_64 - Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1."
 
 CMD ["/usr/sbin/httpd-startup", "/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
