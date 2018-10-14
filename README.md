@@ -1,15 +1,24 @@
 centos-ssh-apache-php-fcgi
 ==========================
 
-Docker Image including CentOS-6 6.10 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
+Docker Image including:
+- CentOS-6 6.10 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
+- CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0.
 
 Apache PHP web server, loading only a minimal set of Apache modules by default. Supports custom configuration via environment variables.
 
 ## Overview & links
 
-The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. For a specific release tag the convention is `centos-6-1.11.0` or `1.11.0` for the [1.11.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.11.0) release tag.
-
+- `centos-7`, `centos-7-2.0.0`, `2.0.0` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
 - `centos-6`, `centos-6-1.11.0`, `1.11.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+
+#### centos-6
+
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. It is recommended to select a specific release tag - the convention is `centos-6-1.11.0` or `1.11.0` for the [1.11.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.11.0) release tag.
+
+#### centos-7
+
+The latest CentOS-7 based release can be pulled from the centos-7 Docker tag. It is recommended to select a specific release tag - the convention is `centos-7-2.0.0` or `2.0.0` for the [2.0.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/2.0.0) release tag.
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
@@ -65,7 +74,8 @@ On first run, the bootstrap script, ([/usr/sbin/httpd-bootstrap](https://github.
 The `apachectl` command can be accessed as follows.
 
 ```
-$ docker exec -it apache-php.pool-1.1.1 apachectl -h
+$ docker exec -it apache-php.pool-1.1.1 \
+	bash -c "apachectl -h"
 ```
 
 ## Instructions

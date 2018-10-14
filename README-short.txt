@@ -1,1 +1,1 @@
-CentOS-6 6.10 x86_64 - Apache / PHP-CGI (FastCGI) / PHP memcached / PHP APC.
+CentOS-7 7.5.1804 x86_64 - Apache / PHP-CGI (FastCGI) / PHP memcached / Zend Opcache.

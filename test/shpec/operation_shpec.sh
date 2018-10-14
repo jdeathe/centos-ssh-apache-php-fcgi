@@ -171,28 +171,40 @@ function __terminate_container ()
 function test_basic_operations ()
 {
 	local -r apache_load_modules_details=" - alias_module
+ - authz_core_module
  - authz_user_module
  - deflate_module
  - dir_module
  - expires_module
+ - filter_module
  - headers_module
  - log_config_module
  - mime_module
+ - proxy_fcgi_module
+ - proxy_module
  - setenvif_module
+ - socache_shmcb_module
  - status_module
+ - unixd_module
  - version_module"
 	local -r required_apache_modules="
+authz_core_module
 authz_user_module
 log_config_module
 expires_module
 deflate_module
+filter_module
 headers_module
 setenvif_module
+socache_shmcb_module
 mime_module
 status_module
 dir_module
 alias_module
+unixd_module
 version_module
+proxy_module
+proxy_fcgi_module
 "
 	local -r other_required_apache_modules="
 core_module
@@ -200,6 +212,7 @@ so_module
 http_module
 authz_host_module
 mpm_worker_module
+cgid_module
 fcgid_module
 "
 	local -r necessary_apache_modules="
@@ -605,6 +618,7 @@ ${other_required_apache_modules}
 				for module in ${all_loaded_apache_modules}; do
 					grep -q "^${module}$" <<< "${necessary_apache_modules}"
 					if [[ status=${?} -ne 0 ]]; then
+						echo "FOUND ${module}"
 						break
 					fi
 				done
@@ -2471,13 +2485,8 @@ function test_healthcheck ()
 						/usr/sbin/httpd2"
 				docker exec -t \
 					apache-php.pool-1.1.1 \
-					bash -c "mv \
-						/usr/sbin/httpd.worker \
-						/usr/sbin/httpd.worker2"
-				docker exec -t \
-					apache-php.pool-1.1.1 \
-					bash -c "if [[ -n \$(pgrep -f '^/usr/sbin/httpd.worker ') ]]; then \
-						kill -9 \$(pgrep -f '^/usr/sbin/httpd.worker '); \
+					bash -c "if [[ -n \$(pgrep -f '^/usr/sbin/httpd ') ]]; then \
+						kill -9 \$(pgrep -f '^/usr/sbin/httpd '); \
 					fi"
 
 				sleep $(

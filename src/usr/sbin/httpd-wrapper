@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+source /etc/httpd-bootstrap.conf
+
+function get_httpd_bin ()
+{
+	local -r HTTPD=/usr/sbin/httpd
+
+	if [[ -n ${APACHE_MPM} ]] \
+		&& [[ -f ${HTTPD}.${APACHE_MPM,,} ]]
+	then
+		printf -- \
+			'%s.%s' \
+			"${HTTPD}" \
+			"${APACHE_MPM,,}"
+	else
+		printf -- \
+			'%s' \
+			"${HTTPD}"
+	fi
+}
+
+readonly HTTPD="$(
+	get_httpd_bin
+)"
+readonly NICE=/bin/nice
+readonly NICENESS="${APACHE_NICENESS:-10}"
+
+while true; do
+	sleep 0.1
+	[[ -e /var/lock/subsys/httpd-bootstrap ]] || break
+done
+
+exec ${NICE} \
+	-n ${NICENESS} \
+	${HTTPD} \
+	-c "ErrorLog /dev/stdout" \
+	-DFOREGROUND \
+	-D ${APACHE_OPERATING_MODE:-production}
