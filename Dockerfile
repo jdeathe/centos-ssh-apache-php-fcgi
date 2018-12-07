@@ -4,8 +4,7 @@
 # CentOS-7, Apache 2.4, PHP 5.4, PHP Memcached 2.2, Zend Opcache.
 # 
 # =============================================================================
-# FROM jdeathe/centos-ssh-apache-php:1.11.0
-FROM jdeathe/centos-ssh:2.4.0
+FROM jdeathe/centos-ssh:2.4.1
 
 # Use the form ([{fqdn}-]{package-name}|[{fqdn}-]{provider-name})
 ARG PACKAGE_NAME="app"
@@ -21,11 +20,12 @@ RUN rpm --rebuilddb \
 		--disableplugin=fastestmirror \
 		elinks-0.12-0.37.pre6.el7 \
 		fcgi-2.4.0-25.el7 \
-		httpd-2.4.6-80.el7.centos.1 \
-		httpd-tools-2.4.6-80.el7.centos.1 \
+		httpd-2.4.6-88.el7.centos \
+		httpd-tools-2.4.6-88.el7.centos \
 		mod_fcgid-2.3.9-4.el7_4.1 \
-		mod_ssl-2.4.6-80.el7.centos.1 \
-		php-cli-5.4.16-45.el7 \
+		mod_ssl-2.4.6-88.el7.centos \
+		php-cli-5.4.16-46.el7 \
+		php-common-5.4.16-46.el7 \
 		php-pecl-zendopcache-7.0.5-2.el7 \
 		php-pecl-memcached-2.2.0-1.el7 \
 	&& yum versionlock add \
