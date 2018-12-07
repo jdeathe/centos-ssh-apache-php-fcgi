@@ -9,7 +9,7 @@ FROM jdeathe/centos-ssh:2.4.1
 # Use the form ([{fqdn}-]{package-name}|[{fqdn}-]{provider-name})
 ARG PACKAGE_NAME="app"
 ARG PACKAGE_PATH="/opt/${PACKAGE_NAME}"
-ARG PACKAGE_RELEASE_VERSION="0.10.0"
+ARG PACKAGE_RELEASE_VERSION="0.11.0"
 
 # -----------------------------------------------------------------------------
 # FastCGI support
