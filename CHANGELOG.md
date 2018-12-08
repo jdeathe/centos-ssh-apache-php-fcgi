@@ -6,7 +6,7 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0.
 
-### 2.0.1 - Unreleased
+### 2.0.1 - 2018-12-08
 
 - Updates source image to [2.4.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.4.1).
 - Updates `httpd` packages to 2.4.6-88.
