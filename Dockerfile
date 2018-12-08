@@ -28,6 +28,7 @@ RUN rpm --rebuilddb \
 		php-common-5.4.16-46.el7 \
 		php-pecl-zendopcache-7.0.5-2.el7 \
 		php-pecl-memcached-2.2.0-1.el7 \
+		php-pecl-redis-2.2.8-1.el7 \
 	&& yum versionlock add \
 		elinks \
 		fcgi \
