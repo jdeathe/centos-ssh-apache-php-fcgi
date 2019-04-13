@@ -2482,12 +2482,12 @@ function test_healthcheck ()
 			it "Returns unhealthy on failure."
 				docker exec -t \
 					apache-php.1 \
-					bash -c "mv \
-						/usr/sbin/httpd \
-						/usr/sbin/httpd2" \
+					bash -c "rm -f /usr/sbin/httpd; \
+						mv /usr/sbin/httpd.worker \
+						/usr/sbin/httpd.worker2" \
 				&& docker exec -t \
 					apache-php.1 \
-					bash -c '/usr/sbin/httpd2 -k stop'
+					bash -c '/usr/sbin/httpd.worker2 -k stop'
 
 				events_since_timestamp="$(
 					date +%s
