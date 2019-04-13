@@ -45,8 +45,11 @@ RUN cat \
 # Package installation
 # ------------------------------------------------------------------------------
 RUN sed -i \
-	-e 's~^description =.*$~description = "This CentOS / Apache / PHP-CGI (FastCGI) service is running in a container."~' \
-	${PACKAGE_PATH}/etc/views/index.ini
+		-e 's~^description =.*$~description = "This CentOS / Apache / PHP-CGI (FastCGI) service is running in a container."~' \
+		${PACKAGE_PATH}/etc/views/index.ini \
+	&& sed -r -i \
+		-e 's~^(source /etc/httpd-bootstrap\.conf)~#\1~' \
+		${PACKAGE_PATH}/bin/php-wrapper
 
 # ------------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
