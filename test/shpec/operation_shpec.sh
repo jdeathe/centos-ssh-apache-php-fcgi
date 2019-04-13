@@ -1325,7 +1325,7 @@ function test_custom_configuration ()
 				docker exec -i \
 					apache-php.1 \
 					tee \
-						/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+						/etc/httpd/conf.d/05-virtual-host.conf \
 						1> /dev/null \
 						<<-CONFIG
 				<VirtualHost *:80 *:8443>
@@ -1411,7 +1411,7 @@ function test_custom_configuration ()
 				docker exec -i \
 					apache-php.1 \
 					tee \
-						/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+						/etc/httpd/conf.d/05-virtual-host.conf \
 						1> /dev/null \
 						<<-CONFIG
 				<VirtualHost *:80 *:8443>
@@ -1482,7 +1482,7 @@ function test_custom_configuration ()
 				docker exec -i \
 					apache-php.1 \
 					tee \
-						/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+						/etc/httpd/conf.d/05-virtual-host.conf \
 						1> /dev/null \
 						<<-CONFIG
 				<VirtualHost *:80 *:8443>
@@ -1556,7 +1556,7 @@ function test_custom_configuration ()
 				docker exec -i \
 					apache-php.1 \
 					tee \
-						/etc/services-config/httpd/conf.d/05-virtual-host.conf \
+						/etc/httpd/conf.d/05-virtual-host.conf \
 						1> /dev/null \
 						<<-CONFIG
 				<VirtualHost *:80 *:8443>

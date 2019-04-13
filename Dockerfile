@@ -26,10 +26,16 @@ ADD src /
 
 # ------------------------------------------------------------------------------
 # Provisioning
+# - Relocate default fcgid configuration to ensure correct loading order
 # - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
-RUN sed -i \
+RUN cat \
+		/etc/httpd/conf.d/fcgid.conf \
+		> /etc/httpd/conf.d/00-fcgid.conf \
+	&& truncate -s 0 \
+		/etc/httpd/conf.d/fcgid.conf \
+	&& sed -i \
 		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
 		/etc/systemd/system/centos-ssh-apache-php-fcgi@.service \
 	&& chmod 700 \
