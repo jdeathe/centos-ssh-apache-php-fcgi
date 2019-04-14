@@ -9,16 +9,16 @@ Apache PHP web server, loading only a minimal set of Apache modules by default. 
 
 ## Overview & links
 
-- `centos-7`, `centos-7-2.0.1`, `2.0.1` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
-- `centos-6`, `centos-6-1.11.1`, `1.11.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- `centos-7`, `centos-7-2.1.0`, `2.1.0` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
+- `centos-6`, `centos-6-1.12.0`, `1.12.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 #### centos-6
 
-The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. It is recommended to select a specific release tag - the convention is `centos-6-1.11.1` or `1.11.1` for the [1.11.1](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.11.1) release tag.
+The latest CentOS-6 based release can be pulled from the centos-6 Docker tag. It is recommended to select a specific release tag - the convention is `centos-6-1.12.0` or `1.12.0` for the [1.12.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/1.12.0) release tag.
 
 #### centos-7
 
-The latest CentOS-7 based release can be pulled from the centos-7 Docker tag. It is recommended to select a specific release tag - the convention is `centos-7-2.0.1` or `2.0.1` for the [2.0.1](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/2.0.1) release tag.
+The latest CentOS-7 based release can be pulled from the centos-7 Docker tag. It is recommended to select a specific release tag - the convention is `centos-7-2.1.0` or `2.1.0` for the [2.1.0](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/tree/2.1.0) release tag.
 
 This build of [Apache](https://httpd.apache.org/), (httpd CentOS package), uses the [mod_fcgid](https://httpd.apache.org/mod_fcgid/) module to run [PHP](http://php.net/) as a [FastCGI](http://www.fastcgi.com/) process.
 
@@ -47,7 +47,7 @@ $ docker run -d \
   --name apache-php.1 \
   -p 8080:80 \
   -e "APACHE_SERVER_NAME=app-1.local" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0
 ```
 
 Now point your browser to `http://{docker-host}:8080` where `{docker-host}` is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
@@ -97,10 +97,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=1.11.1 \
+    --tag=1.12.0 \
     --name=apache-php.1
 ```
 
@@ -115,10 +115,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0 \
   /usr/sbin/scmi uninstall \
     --chroot=/media/root \
-    --tag=1.11.1 \
+    --tag=1.12.0 \
     --name=apache-php.1
 ```
 
@@ -133,10 +133,10 @@ $ docker run \
   --volume /:/media/root \
   --env BASH_ENV="" \
   --env ENV="" \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0 \
   /usr/sbin/scmi install \
     --chroot=/media/root \
-    --tag=1.11.1 \
+    --tag=1.12.0 \
     --name=apache-php.1 \
     --manager=systemd \
     --register \
@@ -160,7 +160,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+    jdeathe/centos-ssh-apache-php-fcgi:1.12.0
   ) --info"
 ```
 
@@ -170,7 +170,7 @@ To perform an installation using the docker name `apache-php.2` simply use the `
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.install}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+    jdeathe/centos-ssh-apache-php-fcgi:1.12.0
   ) --name=apache-php.2"
 ```
 
@@ -180,7 +180,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 $ eval "sudo -E $(
     docker inspect \
     -f "{{.ContainerConfig.Labels.uninstall}}" \
-    jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+    jdeathe/centos-ssh-apache-php-fcgi:1.12.0
   ) --name=apache-php.2"
 ```
 
@@ -191,7 +191,7 @@ With the addition of install/uninstall image labels it is possible to use [Proje
 _NOTE:_ A prerequisite of the following examples is that the image has been pulled (or loaded from the release package).
 
 ```
-$ docker pull jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+$ docker pull jdeathe/centos-ssh-apache-php-fcgi:1.12.0
 ```
 
 To see detailed information about the image run `scmi` with the `--info` option. To see all available `scmi` options run with the `--help` option.
@@ -199,7 +199,7 @@ To see detailed information about the image run `scmi` with the `--info` option.
 ```
 $ sudo -E atomic install \
   -n apache-php.3 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0 \
   --info
 ```
 
@@ -208,14 +208,14 @@ To perform an installation using the docker name `apache-php.3` simply use the `
 ```
 $ sudo -E atomic install \
   -n apache-php.3 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0
 ```
 
 Alternatively, you could use the `scmi` options `--name` or `-n` for naming the container.
 
 ```
 $ sudo -E atomic install \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1 \
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0 \
   --name apache-php.3
 ```
 
@@ -224,7 +224,7 @@ To uninstall use the *same command* that was used to install but with the `unins
 ```
 $ sudo -E atomic uninstall \
   -n apache-php.3 \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0
 ```
 
 #### Environment Variables
@@ -353,7 +353,7 @@ $ docker run -d \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
   --volume apache-php.1.data-tls:/etc/pki/tls \
-  jdeathe/centos-ssh-apache-php-fcgi:1.11.1
+  jdeathe/centos-ssh-apache-php-fcgi:1.12.0
 ```
 
 ##### APACHE_MPM
