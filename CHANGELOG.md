@@ -6,7 +6,7 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0.
 
-### 2.1.0 - Unreleased
+### 2.1.0 - 2019-04-14
 
 - Updates `elinks` package to elinks-0.12-0.37.pre6.el7.0.1.
 - Updates source image to [2.5.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.1).
