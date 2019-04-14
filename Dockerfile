@@ -1,6 +1,6 @@
 FROM jdeathe/centos-ssh-apache-php:1.12.0
 
-ARG RELEASE_VERSION="1.11.1"
+ARG RELEASE_VERSION="1.12.0"
 
 # ------------------------------------------------------------------------------
 # - Base install of required packages
