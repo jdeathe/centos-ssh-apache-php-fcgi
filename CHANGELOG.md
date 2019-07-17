@@ -1,17 +1,18 @@
 # Change Log
 
-## centos-7
+## 2 - centos-7
 
-Summary of release changes for Version 2.
-
-CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0.
+Summary of release changes.
 
 ### 2.2.0 - Unreleased
 
 - Updates description in centos-ssh-apache-php-fcgi.register@.service.
-- Updates Dockerfile `org.deathe.description` metadata LABEL to include PHP redis module.
-- Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 - Updates Apache configuration to use DSO Module identifiers for consistency.
+- Updates CHANGELOG.md to simplify maintenance.
+- Updates README.md to simplify contents and improve readability.
+- Updates README-short.txt to apply to all image variants.
+- Updates Dockerfile `org.deathe.description` metadata LABEL for consistency + include PHP redis module.
+- Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 
 ### 2.1.0 - 2019-04-14
 

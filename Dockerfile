@@ -283,7 +283,7 @@ jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
-	org.deathe.description="CentOS-7 7.5.1804 x86_64 - Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, PHP redis 2.2, Zend Opcache 7.0."
+	org.deathe.description="Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, PHP redis 2.2, Zend Opcache 7.0 - CentOS-7 7.5.1804 x86_64."
 
 HEALTHCHECK \
 	--interval=1s \
