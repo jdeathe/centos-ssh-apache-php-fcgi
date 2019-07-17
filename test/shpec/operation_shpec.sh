@@ -1722,7 +1722,7 @@ function test_custom_configuration ()
 						/opt/php-hw/etc/httpd/conf.d/50-fcgid.conf \
 						1> /dev/null \
 						<<-CONFIG
-				<IfModule mod_fcgid.c>
+				<IfModule fcgid_module>
 				    AddHandler fcgid-script php
 				    AddType text/html php
 				    DirectoryIndex index.php
@@ -1736,7 +1736,7 @@ function test_custom_configuration ()
 				</IfModule>
 
 				<Directory "\${APACHE_CONTENT_ROOT}/\${APACHE_PUBLIC_DIRECTORY}">
-				    <IfModule mod_fcgid.c>
+				    <IfModule fcgid_module>
 				        FcgidWrapper "\${PACKAGE_PATH}/bin/php-wrapper" .php
 				        <Files ~ (\.php$)>
 				            Options +ExecCGI
