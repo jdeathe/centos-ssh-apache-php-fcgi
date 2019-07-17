@@ -9,6 +9,7 @@ CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, 
 ### 2.2.0 - Unreleased
 
 - Updates description in centos-ssh-apache-php-fcgi.register@.service.
+- Updates Dockerfile `org.deathe.description` metadata LABEL to include PHP redis module.
 - Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 
 ### 2.1.0 - 2019-04-14
