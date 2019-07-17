@@ -2,8 +2,8 @@ centos-ssh-apache-php-fcgi
 ==========================
 
 Docker Image including:
-- CentOS-6 6.10 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
-- CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0.
+- CentOS-6 6.10 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP redis 2.2, PHP APC 3.1.
+- CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, PHP redis 2.2, Zend Opcache 7.0.
 
 Apache PHP web server, loading only a minimal set of Apache modules by default. Supports custom configuration via environment variables.
 
