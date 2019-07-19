@@ -11,7 +11,6 @@ function main ()
 	local -a options
 	local tmp="/var/tmp"
 
-	# Parse options
 	while [[ "${#}" -gt 0 ]]
 	do
 		case "${1}" in
@@ -34,7 +33,6 @@ function main ()
 		done
 	fi
 
-	# PHP child process management should always be disabled with mod_fcgid
 	export PHP_FCGI_CHILDREN="0"
 	export PHP_FCGI_MAX_REQUESTS="15000"
 	export PHPRC="/etc"
@@ -43,7 +41,6 @@ function main ()
 	export TEMP="${tmp}"
 	export TMPDIR="${tmp}"
 
-	# FastCGI-enabled PHP executable
 	exec ${nice} \
 		-n ${niceness} \
 		${bin} \
