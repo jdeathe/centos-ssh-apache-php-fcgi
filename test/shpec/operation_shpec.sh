@@ -234,9 +234,9 @@ ${other_required_apache_modules}
 	local container_hostname=""
 	local container_port_80=""
 	local curl_get_request=""
-	local curl_session_name=""
 	local header_server=""
 	local header_x_service_uid=""
+	local php_session_name=""
 	local status=0
 
 	describe "Basic Apache PHP operations"
@@ -657,20 +657,16 @@ ${other_required_apache_modules}
 
 		describe "PHP options"
 			it "Has default session.name."
-				curl_session_name="$(
-					curl -s \
-						--header 'Host: localhost.localdomain' \
-						http://127.0.0.1:${container_port_80}/_phpinfo.php \
-						| grep 'session.name' \
-						| sed -E \
-							-e 's~^.*(session.name)~\1~' \
-							-e 's~</t(r|d)>~~g' \
-							-e 's~<td[^>]*>~ ~g'
+				php_session_name="$(
+					docker exec \
+						apache-php.1 \
+						php -r \
+							"printf('%s', ini_get('session.name'));"
 				)"
 
 				assert equal \
-					"${curl_session_name}" \
-					"session.name PHPSESSID PHPSESSID"
+					"${php_session_name}" \
+					"PHPSESSID"
 			end
 		end
 
@@ -706,11 +702,11 @@ function test_custom_configuration ()
 	local curl_response_code_server_alias=""
 	local curl_session_data_write=""
 	local curl_session_data_read=""
-	local curl_session_name=""
 	local header_x_service_operating_mode=""
 	local header_x_service_uid=""
 	local is_up=""
 	local php_date_timezone=""
+	local php_session_name=""
 	local protocol=""
 
 	describe "Customised Apache PHP configuration"
@@ -2249,20 +2245,16 @@ function test_custom_configuration ()
 			)"
 
 			it "Sets to app-session."
-				curl_session_name="$(
-					curl -s \
-						--header 'Host: localhost.localdomain' \
-						http://127.0.0.1:${container_port_80}/_phpinfo.php \
-						| grep 'session.name' \
-						| sed -E \
-							-e 's~^.*(session.name)~\1~' \
-							-e 's~</t(r|d)>~~g' \
-							-e 's~<td[^>]*>~ ~g'
+				php_session_name="$(
+					docker exec \
+						apache-php.1 \
+						php -r \
+							"printf('%s', ini_get('session.name'));"
 				)"
 
 				assert equal \
-					"${curl_session_name}" \
-					"session.name app-session app-session"
+					"${php_session_name}" \
+					"app-session"
 			end
 
 			__terminate_container \
