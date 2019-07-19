@@ -206,6 +206,9 @@ RUN mkdir -p -m 750 ${PACKAGE_PATH} \
 	&& mv \
 		${PACKAGE_PATH}/public \
 		${PACKAGE_PATH}/public_html \
+	&& rm -f \
+		${PACKAGE_PATH}/bin/php-wrapper \
+		${PACKAGE_PATH}/etc/httpd/conf.d/50-fcgid.conf \
 	&& $(\
 		if [[ -f /usr/share/php-pecl-apc/apc.php ]]; then \
 			cp \
