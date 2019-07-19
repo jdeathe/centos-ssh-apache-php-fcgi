@@ -27,6 +27,7 @@ Summary of release changes.
 - Adds `SYSTEM_TIMEZONE` handling to Makefile, scmi, systemd unit and docker-compose templates.
 - Adds system time zone validation to healthcheck.
 - Adds lock/state file to bootstrap/wrapper scripts.
+- Adds `php-wrapper` and `fcgid.conf` as part of the service; removing dependency on the php-hello-world app.
 - Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 - Removes support for long image tags (i.e. centos-7-2.x.x).
 - Removes `APACHE_AUTOSTART_HTTPD_BOOTSTRAP`, replaced with `ENABLE_HTTPD_BOOTSTRAP`.
