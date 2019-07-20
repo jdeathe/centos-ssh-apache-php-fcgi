@@ -1,1 +1,1 @@
-CentOS-7 7.5.1804 x86_64 - Apache / PHP-CGI (FastCGI) / PHP memcached / Zend Opcache.
+Apache PHP-CGI (FastCGI) - CentOS.

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+function main ()
+{
+	local -r bin="/usr/bin/php-cgi"
+	local -r nice="/bin/nice"
+	local -r niceness="15"
+
+	local bin_options
+	local option
+	local -a options
+	local tmp="/var/tmp"
+
+	while [[ "${#}" -gt 0 ]]
+	do
+		case "${1}" in
+			-d)
+				options+=("${2}")
+				shift 2
+				;;
+			--tmp=*)
+				tmp="${1#*=}"
+				shift 1
+				;;
+		esac
+	done
+
+	if [[ ${#options[@]} -gt 0 ]]
+	then
+		for option in "${options[@]}"
+		do
+			bin_options+=" -d ${option}"
+		done
+	fi
+
+	export PHP_FCGI_CHILDREN="0"
+	export PHP_FCGI_MAX_REQUESTS="15000"
+	export PHPRC="/etc"
+	export REDIRECT_STATUS="200"
+	export TMP="${tmp}"
+	export TEMP="${tmp}"
+	export TMPDIR="${tmp}"
+
+	exec ${nice} \
+		-n ${niceness} \
+		${bin} \
+		${bin_options}
+}
+
+main "${@}"

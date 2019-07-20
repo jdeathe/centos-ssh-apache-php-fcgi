@@ -1,10 +1,37 @@
 # Change Log
 
-## centos-7
+## 2 - centos-7
 
-Summary of release changes for Version 2.
+Summary of release changes.
 
-CentOS-7 7.5.1804 x86_64, Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0.
+### 2.2.0 - 2019-07-20
+
+- Updates source image to [2.6.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.6.0).
+- Updates php-hello-world to [0.12.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.12.0).
+- Updates description in centos-ssh-apache-php-fcgi.register@.service.
+- Updates Apache configuration to use DSO Module identifiers for consistency.
+- Updates CHANGELOG.md to simplify maintenance.
+- Updates README.md to simplify contents and improve readability.
+- Updates README-short.txt to apply to all image variants.
+- Updates Dockerfile `org.deathe.description` metadata LABEL for consistency + include PHP redis module.
+- Updates wrapper to set httpd ErrorLog to `/dev/stderr` instead of `/dev/stdout`.
+- Updates supervisord configuration to send error log output to stderr.
+- Updates bootstrap timer to use UTC date timestamps.
+- Updates bootstrap supervisord configuration file/priority to `20-httpd-bootstrap.conf`/`20`.
+- Updates httpd wrapper supervisord configuration file/priority to `70-httpd-wrapper.conf`/`70`.
+- Fixes bootstrap; ensure user creation occurs before setting ownership with user.
+- Fixes docker host connection status check in Makefile.
+- Adds `PACKAGE_PATH` placeholder/variable replacement in bootstrap of configuration files.
+- Adds `inspect`, `reload` and `top` Makefile targets.
+- Adds improved `clean` Makefile target; includes exited containers and dangling images.
+- Adds `SYSTEM_TIMEZONE` handling to Makefile, scmi, systemd unit and docker-compose templates.
+- Adds system time zone validation to healthcheck.
+- Adds lock/state file to bootstrap/wrapper scripts.
+- Adds `php-wrapper` and `fcgid.conf` as part of the service; removing dependency on the php-hello-world app.
+- Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
+- Removes support for long image tags (i.e. centos-7-2.x.x).
+- Removes `APACHE_AUTOSTART_HTTPD_BOOTSTRAP`, replaced with `ENABLE_HTTPD_BOOTSTRAP`.
+- Removes `APACHE_AUTOSTART_HTTPD_WRAPPER`, replaced with `ENABLE_HTTPD_WRAPPER`.
 
 ### 2.1.0 - 2019-04-14
 

@@ -1,16 +1,15 @@
-FROM jdeathe/centos-ssh:2.5.1
+FROM jdeathe/centos-ssh:2.6.0
 
 # Use the form ([{fqdn}-]{package-name}|[{fqdn}-]{provider-name})
 ARG PACKAGE_NAME="app"
 ARG PACKAGE_PATH="/opt/${PACKAGE_NAME}"
-ARG PACKAGE_RELEASE_VERSION="0.11.0"
-ARG RELEASE_VERSION="2.1.0"
+ARG PACKAGE_RELEASE_VERSION="0.12.0"
+ARG RELEASE_VERSION="2.2.0"
 
 # ------------------------------------------------------------------------------
-# - Base install of required packages
+# Base install of required packages
 # ------------------------------------------------------------------------------
-RUN rpm --rebuilddb \
-	&& yum -y install \
+RUN yum -y install \
 		--setopt=tsflags=nodocs \
 		--disableplugin=fastestmirror \
 		elinks-0.12-0.37.pre6.el7.0.1 \
@@ -43,8 +42,9 @@ ADD src /
 # Provisioning
 # - Add default system users
 # - Limit threads for the application user
-# - Disable Apache directory indexes and welcome page
 # - Disable Apache language based content negotiation
+# - Disable Apache directory indexes and welcome page
+# - Disable Apache default fcgid configuration; replaced with 00-fcgid.conf
 # - Custom Apache configuration
 # - Disable all Apache modules and enable the minimum
 # - Disable SSL
@@ -99,6 +99,10 @@ RUN useradd -r -M -d /var/www/app -s /sbin/nologin app \
 		/etc/httpd/conf.d/welcome.conf \
 	&& chmod 444 \
 		/etc/httpd/conf.d/welcome.conf \
+	&& truncate -s 0 \
+		/etc/httpd/conf.d/fcgid.conf \
+	&& chmod 444 \
+		/etc/httpd/conf.d/fcgid.conf \
 	&& { printf -- \
 		'\n%s\n%s\n%s\n%s\n%s\n%s\n%s\\\n%s%s\\\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
 		'#' \
@@ -186,6 +190,8 @@ RUN useradd -r -M -d /var/www/app -s /sbin/nologin app \
 	&& sed -i \
 		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
 		/etc/systemd/system/centos-ssh-apache-php-fcgi@.service \
+	&& chmod 644 \
+		/etc/supervisord.d/{20-httpd-bootstrap,70-httpd-wrapper}.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/httpd-{bootstrap,wrapper}}
 
@@ -205,6 +211,9 @@ RUN mkdir -p -m 750 ${PACKAGE_PATH} \
 	&& mv \
 		${PACKAGE_PATH}/public \
 		${PACKAGE_PATH}/public_html \
+	&& rm -f \
+		${PACKAGE_PATH}/bin/php-wrapper \
+		${PACKAGE_PATH}/etc/httpd/conf.d/50-fcgid.conf \
 	&& $(\
 		if [[ -f /usr/share/php-pecl-apc/apc.php ]]; then \
 			cp \
@@ -223,8 +232,7 @@ EXPOSE 80 443 8443
 # ------------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
 # ------------------------------------------------------------------------------
-ENV APACHE_AUTOSTART_HTTPD_BOOTSTRAP="true" \
-	APACHE_AUTOSTART_HTTPD_WRAPPER="true" \
+ENV \
 	APACHE_CONTENT_ROOT="/var/www/${PACKAGE_NAME}" \
 	APACHE_CUSTOM_LOG_FORMAT="combined" \
 	APACHE_CUSTOM_LOG_LOCATION="var/log/apache_access_log" \
@@ -245,14 +253,15 @@ ENV APACHE_AUTOSTART_HTTPD_BOOTSTRAP="true" \
 	APACHE_SSL_CIPHER_SUITE="ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS" \
 	APACHE_SSL_PROTOCOL="All -SSLv2 -SSLv3" \
 	APACHE_SYSTEM_USER="app" \
+	ENABLE_HTTPD_BOOTSTRAP="true" \
+	ENABLE_HTTPD_WRAPPER="true" \
+	ENABLE_SSHD_BOOTSTRAP="false" \
+	ENABLE_SSHD_WRAPPER="false" \
 	PACKAGE_PATH="${PACKAGE_PATH}" \
 	PHP_OPTIONS_DATE_TIMEZONE="UTC" \
 	PHP_OPTIONS_SESSION_NAME="PHPSESSID" \
 	PHP_OPTIONS_SESSION_SAVE_HANDLER="files" \
-	PHP_OPTIONS_SESSION_SAVE_PATH="var/session" \
-	SSH_AUTOSTART_SSHD="false" \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP="false" \
-	SSH_AUTOSTART_SUPERVISOR_STDOUT="false"
+	PHP_OPTIONS_SESSION_SAVE_PATH="var/session"
 
 # ------------------------------------------------------------------------------
 # Set image metadata
@@ -283,7 +292,7 @@ jdeathe/centos-ssh-apache-php-fcgi:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-apache-php-fcgi" \
-	org.deathe.description="CentOS-7 7.5.1804 x86_64 - Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, Zend Opcache 7.0."
+	org.deathe.description="Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, PHP redis 2.2, Zend Opcache 7.0 - CentOS-7 7.6.1810 x86_64."
 
 HEALTHCHECK \
 	--interval=1s \
