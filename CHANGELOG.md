@@ -13,6 +13,7 @@ Summary of release changes.
 - Updates README-short.txt to apply to all image variants.
 - Updates Dockerfile `org.deathe.description` metadata LABEL for consistency + include PHP redis module.
 - Adds `.env` files to `.gitignore` for exclusion from version control.
+- Adds `php-wrapper` and `fcgid.conf` as part of the service; removing dependency on the php-hello-world app.
 - Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 
 ### 1.12.0 - 2019-04-14

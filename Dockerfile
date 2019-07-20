@@ -25,13 +25,13 @@ ADD src /
 
 # ------------------------------------------------------------------------------
 # Provisioning
-# - Relocate default fcgid configuration to ensure correct loading order
+# - Disable default fcgid configuration; replaced with 00-fcgid.conf
 # - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
 RUN cat \
 		/etc/httpd/conf.d/fcgid.conf \
-		> /etc/httpd/conf.d/00-fcgid.conf \
+		> /etc/httpd/conf.d/fcgid.conf.off \
 	&& truncate -s 0 \
 		/etc/httpd/conf.d/fcgid.conf \
 	&& sed -i \
@@ -44,9 +44,9 @@ RUN cat \
 RUN sed -i \
 		-e 's~^description =.*$~description = "This CentOS / Apache / PHP-CGI (FastCGI) service is running in a container."~' \
 		${PACKAGE_PATH}/etc/views/index.ini \
-	&& sed -r -i \
-		-e 's~^(source /etc/httpd-bootstrap\.conf)~#\1~' \
-		${PACKAGE_PATH}/bin/php-wrapper
+	&& rm -f \
+		${PACKAGE_PATH}/bin/php-wrapper \
+		${PACKAGE_PATH}/etc/httpd/conf.d/50-fcgid.conf
 
 # ------------------------------------------------------------------------------
 # Set default environment variables used to configure the service container
