@@ -6,6 +6,7 @@ Summary of release changes.
 
 ### 1.13.0 - Unreleased
 
+- Updates image source to [1.13.0](https://github.com/jdeathe/centos-ssh-apache-php/releases/tag/1.13.0).
 - Updates description in `centos-ssh-apache-php-fcgi.register@.service`.
 - Updates CHANGELOG.md to simplify maintenance.
 - Updates README.md to simplify contents and improve readability.
