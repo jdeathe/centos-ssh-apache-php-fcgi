@@ -42,8 +42,9 @@ ADD src /
 # Provisioning
 # - Add default system users
 # - Limit threads for the application user
-# - Disable Apache directory indexes and welcome page
 # - Disable Apache language based content negotiation
+# - Disable Apache directory indexes and welcome page
+# - Disable Apache default fcgid configuration; replaced with 00-fcgid.conf
 # - Custom Apache configuration
 # - Disable all Apache modules and enable the minimum
 # - Disable SSL
@@ -98,6 +99,10 @@ RUN useradd -r -M -d /var/www/app -s /sbin/nologin app \
 		/etc/httpd/conf.d/welcome.conf \
 	&& chmod 444 \
 		/etc/httpd/conf.d/welcome.conf \
+	&& truncate -s 0 \
+		/etc/httpd/conf.d/fcgid.conf \
+	&& chmod 444 \
+		/etc/httpd/conf.d/fcgid.conf \
 	&& { printf -- \
 		'\n%s\n%s\n%s\n%s\n%s\n%s\n%s\\\n%s%s\\\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
 		'#' \
