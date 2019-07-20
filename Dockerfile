@@ -25,14 +25,13 @@ ADD src /
 
 # ------------------------------------------------------------------------------
 # Provisioning
-# - Disable default fcgid configuration; replaced with 00-fcgid.conf
+# - Disable Apache default fcgid configuration; replaced with 00-fcgid.conf
 # - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
-RUN cat \
+RUN truncate -s 0 \
 		/etc/httpd/conf.d/fcgid.conf \
-		> /etc/httpd/conf.d/fcgid.conf.off \
-	&& truncate -s 0 \
+	&& chmod 444 \
 		/etc/httpd/conf.d/fcgid.conf \
 	&& sed -i \
 		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
