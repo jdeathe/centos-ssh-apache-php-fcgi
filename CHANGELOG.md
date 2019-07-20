@@ -8,6 +8,7 @@ CentOS-6 6.10 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP 
 
 ### 1.13.0 - Unreleased
 
+- Updates description in `centos-ssh-apache-php-fcgi.register@.service`.
 - Adds `.env` files to `.gitignore` for exclusion from version control.
 - Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 
