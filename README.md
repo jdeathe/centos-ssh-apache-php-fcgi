@@ -11,7 +11,7 @@ This build uses the base image [jdeathe/centos-ssh](https://github.com/jdeathe/c
 
 ### Image variants
 
-- [Apache 2.4, PHP-CLI 5.4 (FastCGI), PHP memcached 2.2, PHP redis 2.2, Zend Opcache 7.0 - CentOS-7](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7)
+- [Apache 2.4, PHP-CGI 5.4 (FastCGI), PHP memcached 2.2, PHP redis 2.2, Zend Opcache 7.0 - CentOS-7](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7)
 - [Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP redis 2.2, PHP APC 3.1 - CentOS-6](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6)
 
 ## Quick start
