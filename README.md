@@ -97,7 +97,7 @@ $ docker stop apache-php.1 && \
 
 There are environmental variables available which allows the operator to customise the running container.
 
-##### ENABLE_HTTPD_BOOTSTRAP, ENABLE_HTTPD_WRAPPER & ENABLE_PHP_FPM_WRAPPER
+##### ENABLE_HTTPD_BOOTSTRAP & ENABLE_HTTPD_WRAPPER
 
 It may be desirable to prevent the startup of the `httpd-bootstrap` and/or `httpd-wrapper` scripts. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable services from startup by setting `ENABLE_HTTPD_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `ab`, `curl`, `elinks`, `php-cli` etc.
 
