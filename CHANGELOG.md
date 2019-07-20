@@ -1,10 +1,20 @@
 # Change Log
 
-## centos-6
+## 1 - centos-6
 
-Summary of release changes for Version 1.
+Summary of release changes.
 
-CentOS-6 6.10 x86_64, Apache 2.2, PHP-CGI 5.3 (FastCGI), PHP memcached 1.0, PHP APC 3.1.
+### 1.13.0 - 2019-07-20
+
+- Updates image source to [1.13.0](https://github.com/jdeathe/centos-ssh-apache-php/releases/tag/1.13.0).
+- Updates description in `centos-ssh-apache-php-fcgi.register@.service`.
+- Updates CHANGELOG.md to simplify maintenance.
+- Updates README.md to simplify contents and improve readability.
+- Updates README-short.txt to apply to all image variants.
+- Updates Dockerfile `org.deathe.description` metadata LABEL for consistency + include PHP redis module.
+- Adds `.env` files to `.gitignore` for exclusion from version control.
+- Adds `php-wrapper` and `fcgid.conf` as part of the service; removing dependency on the php-hello-world app.
+- Removes unused `DOCKER_PORT_MAP_TCP_22` variable from environment includes.
 
 ### 1.12.0 - 2019-04-14
 
