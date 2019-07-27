@@ -7,6 +7,7 @@ Summary of release changes.
 ### 2.2.1 - Unreleased
 
 - Updates php-hello-world to [0.13.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.13.0).
+- Updates screenshots in README.
 - Adds setting PHP `date.timezone` to `PHP_OPTIONS_DATE_TIMEZONE` into service configuration; removes dependency on app package configuration.
 - Adds session PHP settings into service configuration; removes dependency on app package configuration.
 
