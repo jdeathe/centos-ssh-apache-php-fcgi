@@ -1,0 +1,375 @@
+#!/usr/bin/env bash
+
+set -e
+
+function __get_system_timezone ()
+{
+	local -r default_value="${1:-UTC}"
+
+	local value="${SYSTEM_TIMEZONE}"
+
+	if ! __is_valid_system_timezone "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __is_throttled_interval ()
+{
+	local -i interval="${1:-10}"
+	local pattern_seconds_in_minute='^([1-9]|[1-5][0-9]|60)$'
+
+	# interval must be between 1 and 60 seconds
+	if [[ ! ${interval} =~ ${pattern_seconds_in_minute} ]]
+	then
+		interval=10
+	fi
+
+	if (( $(date +%-S)%${interval} == 0 ))
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function __is_valid_system_timezone ()
+{
+	__is_valid_zone "${@}"
+}
+
+function __is_valid_zone ()
+{
+	local zone="${1}"
+
+	if [[ -n ${zone} ]] \
+		&& [[ -f /usr/share/zoneinfo/${zone} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __last_check_passed ()
+{
+	local -i status=0
+
+	if [[ ! -f ${status_path} ]]
+	then
+		return ${status}
+	else
+		read \
+			-n 1 \
+			status \
+			< "${status_path}"
+
+		if [[ ${status} =~ ^[01]$ ]]
+		then
+			return ${status}
+		else
+			return 1
+		fi
+	fi
+}
+
+function __print_message ()
+{
+	local -r quiet="${quiet:-false}"
+	local -r type="${1}"
+
+	local message="${2}"
+	local prefix
+
+	case "${type}" in
+		error)
+			prefix="ERROR: "
+			;;
+		info)
+			prefix="INFO: "
+			;;
+		*)
+			message="${type}"
+			;;
+	esac
+
+	if [[ ${quiet} == true ]] \
+		&& [[ ${type} != error ]]
+	then
+		return 0
+	elif [[ ${quiet} == true ]] \
+		&& [[ ${type} == error ]]
+	then
+		>&2 printf -- \
+			'%s%s\n' \
+			"${prefix}" \
+			"${message}"
+	else
+		printf -- \
+			'%s%s\n' \
+			"${prefix}" \
+			"${message}"
+	fi
+}
+
+function __record_exit_status ()
+{
+	local -r status_directory="${status_path%/*}"
+
+	local -i status=${1:-${?}}
+
+	if [[ ! -d ${status_directory} ]]
+	then
+		install \
+			-d \
+			-m 0660 \
+			-o root \
+			-g root \
+			"${status_directory}"
+	fi
+
+	if [[ ! -f ${status_path} ]]
+	then
+		install \
+			-m 0660 \
+			-o root \
+			-g root \
+			/dev/null \
+			"${status_path}"
+	fi
+
+	printf -- \
+		'%d' \
+		"${status}" \
+		> "${status_path}"
+
+	trap - \
+		EXIT
+
+	exit ${status}
+}
+
+function __usage ()
+{
+	cat <<-USAGE
+	
+	Usage: ${0##*/} [OPTIONS]
+	       ${0##*/} [-h|--help]
+	
+	Options:
+	  -H, --host=<hostname>               Hostname used in the Host request 
+	                                      header.
+	                                      Default: localhost.localdomain
+	  -i, --interval=<seconds>            After the first successful check the 
+	                                      CURL request interval can be throttled 
+	                                      to repeat at an interval of seconds 
+	                                      between 1-60. An interval of 1 results 
+	                                      in a check request occurring every 
+	                                      second whereas an interval of 60 limits 
+	                                      check requests to once per minute.
+	                                      Default: 10
+	  -m, --max-time=<seconds>            Maximum time allowed for the CURL check 
+	                                      to complete.
+	                                      Default: 0.5
+	  -u, --url=<url>                     The local IPv4 URL endpoint to check 
+	                                      inclusive of protocol.
+	                                      Default: http://127.0.0.1/
+	  -q, --quiet                         Do not print message output.
+	
+	USAGE
+
+	exit 1
+}
+
+function main ()
+{
+	local -r pattern_host='^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$'
+	local -r pattern_local_url='^https?://(127\.0\.0\.1|localhost)/'
+	local -r pattern_max_time='^[1-9][0-9]*$'
+	local -r pattern_seconds_in_minute='^([1-9]|[1-5][0-9]|60)$'
+	local -r status_path="/var/lib/healthcheck/status"
+	local -r system_timezone="$(
+		__get_system_timezone
+	)"
+	local -r zone="$(
+		system-timezone -qq
+	)"
+
+	local host="localhost.localdomain"
+	local -i interval=10
+	local max_time=1
+	local quiet="false"
+	local url="http://127.0.0.1/"
+
+	trap "__record_exit_status \${?}" \
+		EXIT
+
+	while [[ "${#}" -gt 0 ]]
+	do
+		case "${1}" in
+			-h|--help)
+				__usage
+				break
+				;;
+			-H)
+				host="${2}"
+				shift 2 || break
+				;;
+			--host=*)
+				host="${1#*=}"
+				shift 1
+				;;
+			-i)
+				interval="${2}"
+				shift 2 || break
+				;;
+			--interval=*)
+				interval="${1#*=}"
+				shift 1
+				;;
+			-m)
+				max_time="${2}"
+				shift 2 || break
+				;;
+			--max-time=*)
+				max_time="${1#*=}"
+				shift 1
+				;;
+			-u)
+				url="${2}"
+				shift 2 || break
+				;;
+			--url=*)
+				url="${1#*=}"
+				shift 1
+				;;
+			-q|--quiet)
+				quiet="true"
+				shift 1
+				;;
+			*)
+				__usage
+				;;
+		esac
+	done
+
+	if [[ ! ${host} =~ ${pattern_host} ]]
+	then
+		__print_message \
+			"error" \
+			"Invalid host."
+		exit 1
+	fi
+
+	if [[ ! ${interval} =~ ${pattern_seconds_in_minute} ]]
+	then
+		__print_message \
+			"error" \
+			"Invalid interval."
+		exit 1
+	fi
+
+	if [[ ! ${max_time} =~ ${pattern_max_time} ]]
+	then
+		__print_message \
+			"error" \
+			"Invalid max_time."
+		exit 1
+	fi
+
+	if [[ ! ${url} =~ ${pattern_local_url} ]]
+	then
+		__print_message \
+			"error" \
+			"Invalid url."
+		exit 1
+	fi
+
+	if ! ps axo command \
+		| grep -qE '^/usr/bin/python /usr/bin/supervisord'
+	then
+		__print_message \
+			"error" \
+			"supervisord not running."
+		exit 1
+	fi
+
+	if [[ ${system_timezone} != "${zone}" ]]
+	then
+		__print_message \
+			"error" \
+			"system-timezone zone mismatch."
+		exit 1
+	fi
+
+	if [[ ${ENABLE_HTTPD_BOOTSTRAP} == false ]] \
+		&& [[ ${ENABLE_HTTPD_WRAPPER} == false ]]
+	then
+		exit 0
+	fi
+
+	if [[ ${ENABLE_HTTPD_BOOTSTRAP} == true ]] \
+		&& [[ ! -f /var/lib/misc/httpd-bootstrap ]]
+	then
+		__print_message \
+			"error" \
+			"httpd-bootstrap not completed."
+		exit 1
+	fi
+
+	if [[ ${ENABLE_HTTPD_WRAPPER} == true ]] \
+		&& ! ps axo command \
+		| grep -qE '^/usr/sbin/httpd(\.worker|\.event)? '
+	then
+		__print_message \
+			"error" \
+			"httpd not running."
+		exit 1
+	fi
+
+	# Throttle CURL checks if last check passed.
+	if [[ ${ENABLE_HTTPD_WRAPPER} == false ]] \
+		|| __last_check_passed \
+		&& ! __is_throttled_interval \
+			"${interval}"
+	then
+		exit 0
+	fi
+
+	http_code="$(
+		curl \
+			-f \
+			-k \
+			-s \
+			-I \
+			-m ${max_time} \
+			--no-keepalive \
+			-w %{http_code} \
+			-o /dev/null \
+			-A Docker-Healthcheck \
+			-H "Connection: close" \
+			-H "Host: ${host}" \
+			"${url}"
+	)"
+
+	# Fail on server errors only.
+	if [[ ${http_code} == 000 ]] \
+		|| [[ ${http_code} -ge 500 ]]
+	then
+		__print_message \
+			"$(
+				printf -- \
+					'%s Host:%s %s' \
+					"${http_code}" \
+					"${host}" \
+					"${url}"
+			)"
+		exit 1
+	fi
+
+	exit 0
+}
+
+main "${@}"
