@@ -3,7 +3,7 @@ FROM jdeathe/centos-ssh:2.6.0
 # Use the form ([{fqdn}-]{package-name}|[{fqdn}-]{provider-name})
 ARG PACKAGE_NAME="app"
 ARG PACKAGE_PATH="/opt/${PACKAGE_NAME}"
-ARG PACKAGE_RELEASE_VERSION="0.12.0"
+ARG PACKAGE_RELEASE_VERSION="0.13.0"
 ARG RELEASE_VERSION="2.2.0"
 
 # ------------------------------------------------------------------------------
@@ -47,9 +47,9 @@ ADD src /
 # - Disable Apache default fcgid configuration; replaced with 00-fcgid.conf
 # - Custom Apache configuration
 # - Disable all Apache modules and enable the minimum
-# - Disable SSL
 # - Disable the default SSL Virtual Host
-# - Global PHP configuration changes
+# - Disable SSL
+# - Add default PHP configuration overrides to 00-php.ini drop-in.
 # - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
@@ -215,9 +215,6 @@ RUN mkdir -p -m 750 ${PACKAGE_PATH} \
 	&& mv \
 		${PACKAGE_PATH}/public \
 		${PACKAGE_PATH}/public_html \
-	&& rm -f \
-		${PACKAGE_PATH}/bin/php-wrapper \
-		${PACKAGE_PATH}/etc/httpd/conf.d/50-fcgid.conf \
 	&& $(\
 		if [[ -f /usr/share/php-pecl-apc/apc.php ]]; then \
 			cp \
@@ -228,8 +225,7 @@ RUN mkdir -p -m 750 ${PACKAGE_PATH} \
 	&& chown -R app:app-www ${PACKAGE_PATH} \
 	&& find ${PACKAGE_PATH} -type d -exec chmod 750 {} + \
 	&& find ${PACKAGE_PATH}/var -type d -exec chmod 770 {} + \
-	&& find ${PACKAGE_PATH} -type f -exec chmod 640 {} + \
-	&& find ${PACKAGE_PATH}/bin -type f -exec chmod 750 {} +
+	&& find ${PACKAGE_PATH} -type f -exec chmod 640 {} +
 
 EXPOSE 80 443 8443
 
