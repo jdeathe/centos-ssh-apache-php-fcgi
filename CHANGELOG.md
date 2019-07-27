@@ -7,6 +7,7 @@ Summary of release changes.
 ### 2.2.1 - Unreleased
 
 - Adds setting PHP `date.timezone` to `PHP_OPTIONS_DATE_TIMEZONE` into service configuration; removes dependency on app package configuration.
+- Adds session PHP settings into service configuration; removes dependency on app package configuration.
 
 ### 2.2.0 - 2019-07-20
 
