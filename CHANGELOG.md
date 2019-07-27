@@ -4,6 +4,11 @@
 
 Summary of release changes.
 
+### 1.13.1 - Unreleased
+
+- Updates php-hello-world to [0.13.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.13.0).
+- Removes dependency on `jdeathe/centos-ssh-apache-php`; source from `jdeathe/centos-ssh`.
+
 ### 1.13.0 - 2019-07-20
 
 - Updates image source to [1.13.0](https://github.com/jdeathe/centos-ssh-apache-php/releases/tag/1.13.0).
