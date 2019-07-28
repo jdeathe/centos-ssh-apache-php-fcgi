@@ -4,7 +4,7 @@
 
 Summary of release changes.
 
-### 2.2.1 - Unreleased
+### 2.2.1 - 2019-07-28
 
 - Updates php-hello-world to [0.13.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.13.0).
 - Updates screenshots in README.
