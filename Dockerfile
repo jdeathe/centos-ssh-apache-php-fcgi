@@ -3,8 +3,8 @@ FROM jdeathe/centos-ssh:2.6.0
 # Use the form ([{fqdn}-]{package-name}|[{fqdn}-]{provider-name})
 ARG PACKAGE_NAME="app"
 ARG PACKAGE_PATH="/opt/${PACKAGE_NAME}"
-ARG PACKAGE_RELEASE_VERSION="0.12.0"
-ARG RELEASE_VERSION="2.2.0"
+ARG PACKAGE_RELEASE_VERSION="0.13.0"
+ARG RELEASE_VERSION="2.2.1"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
@@ -47,9 +47,9 @@ ADD src /
 # - Disable Apache default fcgid configuration; replaced with 00-fcgid.conf
 # - Custom Apache configuration
 # - Disable all Apache modules and enable the minimum
-# - Disable SSL
 # - Disable the default SSL Virtual Host
-# - Global PHP configuration changes
+# - Disable SSL
+# - Add default PHP configuration overrides to 00-php.ini drop-in.
 # - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
@@ -163,15 +163,19 @@ RUN useradd -r -M -d /var/www/app -s /sbin/nologin app \
 		/etc/php.ini \
 		> /etc/php.d/00-php.ini.default \
 	&& sed -r \
-		-e 's~^;(user_ini.filename =)$~\1~g' \
-		-e 's~^;(cgi.fix_pathinfo=1)$~\1~g' \
-		-e 's~^;(date.timezone =)$~\1 UTC~g' \
-		-e 's~^(expose_php = )On$~\1Off~g' \
-		-e 's~^;(realpath_cache_size = ).*$~\14096k~' \
-		-e 's~^;(realpath_cache_ttl = ).*$~\1600~' \
-		-e 's~^;?(session.name = ).*$~\1"${PHP_OPTIONS_SESSION_NAME:-PHPSESSID}"~' \
-		-e 's~^;?(session.save_handler = ).*$~\1"${PHP_OPTIONS_SESSION_SAVE_HANDLER:-files}"~' \
-		-e 's~^;?(session.save_path = ).*$~\1"${PHP_OPTIONS_SESSION_SAVE_PATH:-/var/lib/php/session}"~' \
+		-e 's~^;?(cgi.fix_pathinfo( )?=).*$~\1\21~g' \
+		-e 's~^;?(date.timezone( )?=).*$~\1\2"${PHP_OPTIONS_DATE_TIMEZONE:-UTC}"~g' \
+		-e 's~^;?(expose_php( )?=).*$~\1\2Off~g' \
+		-e 's~^;?(realpath_cache_size( )?=).*$~\1\24096k~' \
+		-e 's~^;?(realpath_cache_ttl( )?=).*$~\1\2600~' \
+		-e 's~^;?(session.cookie_httponly( )?=).*$~\1\21~' \
+		-e 's~^;?(session.name( )?=).*$~\1\2"${PHP_OPTIONS_SESSION_NAME:-PHPSESSID}"~' \
+		-e 's~^;?(session.save_handler( )?=).*$~\1\2"${PHP_OPTIONS_SESSION_SAVE_HANDLER:-files}"~' \
+		-e 's~^;?(session.save_path( )?=).*$~\1\2"${PHP_OPTIONS_SESSION_SAVE_PATH:-/var/lib/php/session}"~' \
+		-e 's~^;?(session.sid_bits_per_character( )?=).*$~\1\25~' \
+		-e 's~^;?(session.sid_length( )?=).*$~\1\264~' \
+		-e 's~^;?(session.use_strict_mode( )?=).*$~\1\21~' \
+		-e 's~^;?(user_ini.filename( )?=).*$~\1~g' \
 		/etc/php.d/00-php.ini.default \
 		> /etc/php.d/00-php.ini \
 	&& sed \
@@ -211,9 +215,6 @@ RUN mkdir -p -m 750 ${PACKAGE_PATH} \
 	&& mv \
 		${PACKAGE_PATH}/public \
 		${PACKAGE_PATH}/public_html \
-	&& rm -f \
-		${PACKAGE_PATH}/bin/php-wrapper \
-		${PACKAGE_PATH}/etc/httpd/conf.d/50-fcgid.conf \
 	&& $(\
 		if [[ -f /usr/share/php-pecl-apc/apc.php ]]; then \
 			cp \
@@ -224,8 +225,7 @@ RUN mkdir -p -m 750 ${PACKAGE_PATH} \
 	&& chown -R app:app-www ${PACKAGE_PATH} \
 	&& find ${PACKAGE_PATH} -type d -exec chmod 750 {} + \
 	&& find ${PACKAGE_PATH}/var -type d -exec chmod 770 {} + \
-	&& find ${PACKAGE_PATH} -type f -exec chmod 640 {} + \
-	&& find ${PACKAGE_PATH}/bin -type f -exec chmod 750 {} +
+	&& find ${PACKAGE_PATH} -type f -exec chmod 640 {} +
 
 EXPOSE 80 443 8443
 

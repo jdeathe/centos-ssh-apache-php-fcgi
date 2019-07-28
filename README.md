@@ -1,7 +1,7 @@
 ### Tags and respective `Dockerfile` links
 
-- `centos-7`, `2.2.0` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
-- `centos-6`, `1.13.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- `centos-7`, `2.2.1` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
+- `centos-6`, `1.13.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -25,12 +25,12 @@ $ docker run -d \
   --name apache-php.1 \
   -p 8080:80 \
   -e "APACHE_SERVER_NAME=app-1.local" \
-  jdeathe/centos-ssh-apache-php-fcgi:2.2.0
+  jdeathe/centos-ssh-apache-php-fcgi:2.2.1
 ```
 
 Go to `http://{{docker-host}}:8080` using a browser where `{{docker-host}}` is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
 
-![PHP "Hello, world!" - Chrome screenshot](https://raw.github.com/jdeathe/centos-ssh-apache-php-fcgi/centos-7/images/php-hello-world-chrome-fcgi.png)
+![PHP "Hello, world!" - Chrome screenshot](https://raw.github.com/jdeathe/centos-ssh-apache-php-fcgi/centos-7/images/php-hello-world-chrome-v2.2.1.png)
 
 To be able to access the server using the "app-1.local" domain name you need to add a hosts file entry locally; such that the IP address of the Docker host resolves to the name "app-1.local". Alternatively, you can use the `elinks` browser installed in the container.
 
@@ -41,7 +41,7 @@ $ docker exec -it apache-php.1 \
   elinks http://app-1.local
 ```
 
-![PHP "Hello, world!" - eLinks screenshot](https://raw.github.com/jdeathe/centos-ssh-apache-php-fcgi/centos-7/images/php-hello-world-elinks-fcgi.png)
+![PHP "Hello, world!" - eLinks screenshot](https://raw.github.com/jdeathe/centos-ssh-apache-php-fcgi/centos-7/images/php-hello-world-elinks-v2.2.1.png)
 
 Verify the named container's process status and health.
 
@@ -90,7 +90,7 @@ $ docker stop apache-php.1 && \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_SSL_PROTOCOL=All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1" \
   --env "PHP_OPTIONS_DATE_TIMEZONE=Europe/London" \
-  jdeathe/centos-ssh-apache-php-fcgi:2.2.0
+  jdeathe/centos-ssh-apache-php-fcgi:2.2.1
 ```
 
 #### Environment Variables
@@ -204,7 +204,7 @@ $ docker stop apache-php.1 && \
   --env "APACHE_SERVER_ALIAS=app-1" \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
-  jdeathe/centos-ssh-apache-php-fcgi:2.2.0
+  jdeathe/centos-ssh-apache-php-fcgi:2.2.1
 ```
 
 ##### APACHE_MPM

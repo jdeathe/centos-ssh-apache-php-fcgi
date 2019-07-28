@@ -4,6 +4,13 @@
 
 Summary of release changes.
 
+### 2.2.1 - 2019-07-28
+
+- Updates php-hello-world to [0.13.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.13.0).
+- Updates screenshots in README.
+- Adds setting PHP `date.timezone` to `PHP_OPTIONS_DATE_TIMEZONE` into service configuration; removes dependency on app package configuration.
+- Adds session PHP settings into service configuration; removes dependency on app package configuration.
+
 ### 2.2.0 - 2019-07-20
 
 - Updates source image to [2.6.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.6.0).
