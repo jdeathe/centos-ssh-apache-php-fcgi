@@ -4,6 +4,10 @@
 
 Summary of release changes.
 
+### 1.13.2 - Unreleased
+
+- Adds PHP 5 applicable session settings into service configuration.
+
 ### 1.13.1 - 2019-07-28
 
 - Updates php-hello-world to [0.13.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.13.0).
