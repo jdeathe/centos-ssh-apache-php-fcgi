@@ -4,6 +4,12 @@
 
 Summary of release changes.
 
+### 1.13.2 - 2019-08-05
+
+- Updates php-hello-world to [0.14.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.14.0).
+- Adds PHP 5 applicable session settings into service configuration.
+- Adds configuration file replacement of placeholders for Xdebug's `DBGP_IDEKEY`.
+
 ### 1.13.1 - 2019-07-28
 
 - Updates php-hello-world to [0.13.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.13.0).
