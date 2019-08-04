@@ -14,6 +14,7 @@ Summary of release changes.
 - Updates screenshots in README.
 - Adds setting PHP `date.timezone` to `PHP_OPTIONS_DATE_TIMEZONE` into service configuration; removes dependency on app package configuration.
 - Adds session PHP settings into service configuration; removes dependency on app package configuration.
+- Adds configuration file replacement of placeholders for Xdebug's `DBGP_IDEKEY`.
 
 ### 2.2.0 - 2019-07-20
 
