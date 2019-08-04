@@ -3,8 +3,8 @@ FROM jdeathe/centos-ssh:2.6.0
 # Use the form ([{fqdn}-]{package-name}|[{fqdn}-]{provider-name})
 ARG PACKAGE_NAME="app"
 ARG PACKAGE_PATH="/opt/${PACKAGE_NAME}"
-ARG PACKAGE_RELEASE_VERSION="0.13.0"
-ARG RELEASE_VERSION="2.2.1"
+ARG PACKAGE_RELEASE_VERSION="0.14.0"
+ARG RELEASE_VERSION="2.2.2"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
@@ -49,7 +49,8 @@ ADD src /
 # - Disable all Apache modules and enable the minimum
 # - Disable the default SSL Virtual Host
 # - Disable SSL
-# - Add default PHP configuration overrides to 00-php.ini drop-in.
+# - Add default PHP configuration overrides to 00-php.ini drop-in
+# - PHP OPcache configuration
 # - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
@@ -169,6 +170,8 @@ RUN useradd -r -M -d /var/www/app -s /sbin/nologin app \
 		-e 's~^;?(realpath_cache_size( )?=).*$~\1\24096k~' \
 		-e 's~^;?(realpath_cache_ttl( )?=).*$~\1\2600~' \
 		-e 's~^;?(session.cookie_httponly( )?=).*$~\1\21~' \
+		-e 's~^;?(session.hash_bits_per_character( )?=).*$~\1\25~' \
+		-e 's~^;?(session.hash_function( )?=).*$~\1\2sha256~' \
 		-e 's~^;?(session.name( )?=).*$~\1\2"${PHP_OPTIONS_SESSION_NAME:-PHPSESSID}"~' \
 		-e 's~^;?(session.save_handler( )?=).*$~\1\2"${PHP_OPTIONS_SESSION_SAVE_HANDLER:-files}"~' \
 		-e 's~^;?(session.save_path( )?=).*$~\1\2"${PHP_OPTIONS_SESSION_SAVE_PATH:-/var/lib/php/session}"~' \
