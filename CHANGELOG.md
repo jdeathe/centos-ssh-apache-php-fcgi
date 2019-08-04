@@ -7,6 +7,7 @@ Summary of release changes.
 ### 1.13.2 - Unreleased
 
 - Adds PHP 5 applicable session settings into service configuration.
+- Adds configuration file replacement of placeholders for Xdebug's `DBGP_IDEKEY`.
 
 ### 1.13.1 - 2019-07-28
 
