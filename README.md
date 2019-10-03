@@ -1,7 +1,7 @@
 ### Tags and respective `Dockerfile` links
 
-- `centos-7`, `2.2.2` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
-- `centos-6`, `1.13.2` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- [`2.2.2`](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/releases/tag/2.2.2), `centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
+- [`1.13.2`](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/releases/tag/1.13.2), `centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 ## Overview
 

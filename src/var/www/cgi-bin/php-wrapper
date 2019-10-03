@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+function __get_proxy ()
+{
+	printf -- \
+		'%s -n %s' \
+		"${nice}" \
+		"${niceness}"
+}
+
 function main ()
 {
 	local -r bin="/usr/bin/php-cgi"
@@ -9,6 +17,9 @@ function main ()
 	local bin_options
 	local option
 	local -a options
+	local proxy="$(
+		__get_proxy
+	)"
 	local tmp="/var/tmp"
 
 	while [[ "${#}" -gt 0 ]]
@@ -21,6 +32,10 @@ function main ()
 			--tmp=*)
 				tmp="${1#*=}"
 				shift 1
+				;;
+			--tmp)
+				tmp+=("${2}")
+				shift 2
 				;;
 		esac
 	done
@@ -41,8 +56,7 @@ function main ()
 	export TEMP="${tmp}"
 	export TMPDIR="${tmp}"
 
-	exec ${nice} \
-		-n ${niceness} \
+	exec ${proxy} \
 		${bin} \
 		${bin_options}
 }
