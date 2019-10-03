@@ -186,6 +186,7 @@ function test_basic_operations ()
  - status_module
  - unixd_module
  - version_module"
+	local -r content_index_html="$(< test/fixture/apache/var/www/public_html/index.html)"
 	local -r required_apache_modules="
 authz_core_module
 authz_user_module
