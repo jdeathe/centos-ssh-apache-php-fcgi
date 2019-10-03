@@ -2579,7 +2579,7 @@ describe "jdeathe/centos-ssh-apache-php-fcgi:latest"
 	__destroy
 	__setup
 	test_basic_operations
-	# test_custom_configuration
-	# test_healthcheck
+	test_custom_configuration
+	test_healthcheck
 	__destroy
 end
