@@ -16,6 +16,7 @@ Summary of release changes.
 - Adds improved test workflow; added `test-setup` target to Makefile.
 - Adds Makefile target `logsdef` to handle deferred logs output within a target chain.
 - Adds `/docs` directory for supplementary documentation and simplify README.
+- Adds drop-in configuration for `/server-satus`; removes from global Apache configuration.
 - Fixes validation failure of 0 second --timeout value in `test/health_status`.
 
 ### 1.13.2 - 2019-08-05
