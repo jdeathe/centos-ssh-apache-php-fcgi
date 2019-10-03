@@ -44,6 +44,7 @@ ADD src /
 # - Limit threads for the application user
 # - Disable Apache directory indexes and welcome page
 # - Disable Apache language based content negotiation
+# - Prevent unintentional override of default DirectoryIndex
 # - Custom Apache configuration
 # - Disable all Apache modules and enable the minimum
 # - Disable Apache default fcgid configuration; replaced with 00-fcgid.conf
@@ -89,6 +90,7 @@ RUN useradd -r -M -d /var/www/app -s /sbin/nologin app \
 		-e 's~^LanguagePriority \(.*\)$~#LanguagePriority \1~g' \
 		-e 's~^ForceLanguagePriority \(.*\)$~#ForceLanguagePriority \1~g' \
 		-e 's~^AddLanguage \(.*\)$~#AddLanguage \1~g' \
+		-e '/^Include conf.d\/\*.conf/i DirectoryIndex index.html index.html.var' \
 		/etc/httpd/conf/httpd.conf \
 	&& { printf -- \
 		'\n%s\n%s\n%s\n%s\\\n%s%s\\\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
