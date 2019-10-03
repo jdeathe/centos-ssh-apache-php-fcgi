@@ -4,6 +4,12 @@
 
 Summary of release changes.
 
+### 2.2.3 - Unreleased
+
+- Updates `httpd` packages to 2.4.6-90.
+- Updates `mod_fcgid` package to 2.3.9-6.
+- Updates `mod_ssl` package to 2.4.6-90.
+
 ### 2.2.2 - 2019-08-05
 
 - Updates php-hello-world to [0.14.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.14.0).
