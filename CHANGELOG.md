@@ -6,6 +6,7 @@ Summary of release changes.
 
 ### 2.2.3 - Unreleased
 
+- Deprecate Makefile target `logs-delayed`; replaced with `logsdef`.
 - Updates source image to [2.6.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.6.1).
 - Updates `httpd` packages to 2.4.6-90.
 - Updates `mod_fcgid` package to 2.3.9-6.
