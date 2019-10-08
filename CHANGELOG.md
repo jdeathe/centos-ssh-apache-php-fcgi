@@ -4,6 +4,27 @@
 
 Summary of release changes.
 
+### 2.2.3 - 2019-10-08
+
+- Deprecate Makefile target `logs-delayed`; replaced with `logsdef`.
+- Updates source image to [2.6.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.6.1).
+- Updates `httpd` packages to 2.4.6-90.
+- Updates `mod_fcgid` package to 2.3.9-6.
+- Updates `mod_ssl` package to 2.4.6-90.
+- Updates `test/health_status` helper script with for consistency.
+- Updates Makefile target `logs` to accept `[OPTIONS]` (e.g `make -- logs -ft`).
+- Updates info/error output for consistency.
+- Updates healthcheck failure messages to remove EOL character that is rendered in status response.
+- Updates wrapper script; only emit "waiting on" info message if bootstrap hasn't completed.
+- Updates ordering of Tags and respective Dockerfile links in README.md for readability.
+- Updates session test cases; replace PHP memcached session store with redis.
+- Adds improved test workflow; added `test-setup` target to Makefile.
+- Adds Makefile target `logsdef` to handle deferred logs output within a target chain.
+- Adds `/docs` directory for supplementary documentation and simplify README.
+- Adds test case for Apache `DirectoryIndex` default.
+- Fixes validation failure of 0 second --timeout value in `test/health_status`.
+- Removes PHP-FPM status handler configuration from the Apache server-status drop-in.
+
 ### 2.2.2 - 2019-08-05
 
 - Updates php-hello-world to [0.14.0](https://github.com/jdeathe/php-hello-world/releases/tag/0.14.0).
