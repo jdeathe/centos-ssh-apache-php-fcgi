@@ -1,7 +1,7 @@
 ### Tags and respective `Dockerfile` links
 
-- [`2.2.2`](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/releases/tag/2.2.2), `centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
-- [`1.13.2`](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/releases/tag/1.13.2), `centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
+- [`2.2.3`](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/releases/tag/2.2.3), `centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-7/Dockerfile)
+- [`1.13.3`](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/releases/tag/1.13.3), `centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-apache-php-fcgi/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -25,7 +25,7 @@ $ docker run -d \
   --name apache-php.1 \
   -p 8080:80 \
   -e "APACHE_SERVER_NAME=app-1.local" \
-  jdeathe/centos-ssh-apache-php-fcgi:2.2.2
+  jdeathe/centos-ssh-apache-php-fcgi:2.2.3
 ```
 
 Go to `http://{{docker-host}}:8080` using a browser where `{{docker-host}}` is the host name of your docker server and, if all went well, you should see the "Hello, world!" page.
@@ -90,7 +90,7 @@ $ docker stop apache-php.1 && \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_SSL_PROTOCOL=All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1" \
   --env "PHP_OPTIONS_DATE_TIMEZONE=Europe/London" \
-  jdeathe/centos-ssh-apache-php-fcgi:2.2.2
+  jdeathe/centos-ssh-apache-php-fcgi:2.2.3
 ```
 
 #### Environment Variables
@@ -204,7 +204,7 @@ $ docker stop apache-php.1 && \
   --env "APACHE_SERVER_ALIAS=app-1" \
   --env "APACHE_SERVER_NAME=app-1.local" \
   --env "APACHE_MOD_SSL_ENABLED=true" \
-  jdeathe/centos-ssh-apache-php-fcgi:2.2.2
+  jdeathe/centos-ssh-apache-php-fcgi:2.2.3
 ```
 
 ##### APACHE_MPM
